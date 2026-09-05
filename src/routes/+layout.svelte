@@ -1,7 +1,9 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { get } from 'svelte/store';
 	import { afterNavigate } from '$app/navigation';
 	import Lenis from 'lenis';
+	import 'lenis/dist/lenis.css';
 	import '../app.css';
 	import Navbar from '$lib/components/Navbar.svelte';
 	import CustomCursor from '$lib/components/CustomCursor.svelte';
@@ -14,14 +16,19 @@
 	import KonamiEgg from '$lib/components/KonamiEgg.svelte';
 	import CommandPalette from '$lib/components/CommandPalette.svelte';
 	import PageTransition from '$lib/components/PageTransition.svelte';
+	import { gsap, ScrollTrigger } from '$lib/actions/gsap';
+	import { lenis as lenisStore, shouldResetScroll } from '$lib/stores/lenis';
 	import { scrollY, scrollProgress, scrollDirection, scrollVelocity } from '$lib/stores/scroll';
 	import { updateTimeAccent, initTheme, resolvedTheme } from '$lib/stores/theme';
 
 	let { children } = $props();
-	let lenisInstance: Lenis | null = null;
 
-	afterNavigate(() => {
-		lenisInstance?.scrollTo(0, { immediate: true });
+	afterNavigate((nav) => {
+		// SvelteKit has already restored popstate scroll / jumped to a hash target by now.
+		if (shouldResetScroll(nav)) {
+			get(lenisStore)?.scrollTo(0, { immediate: true });
+		}
+		ScrollTrigger.refresh();
 	});
 
 	onMount(() => {
@@ -32,16 +39,19 @@
 		updateTimeAccent();
 		const themeInterval = setInterval(updateTimeAccent, 30 * 60 * 1000);
 
+		// Smooth scrolling, driven by GSAP's ticker and kept in sync with ScrollTrigger
+		// (see the "GSAP ScrollTrigger" section of the Lenis README).
 		const lenis = new Lenis({
 			duration: 1.2,
 			easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
 			touchMultiplier: 2
 		});
-		lenisInstance = lenis;
+		lenisStore.set(lenis);
 
 		let lastScroll = 0;
 		let lastTime = performance.now();
 
+		lenis.on('scroll', ScrollTrigger.update);
 		lenis.on('scroll', ({ scroll, limit }: { scroll: number; limit: number }) => {
 			const now = performance.now();
 			const dt = Math.max(now - lastTime, 1);
@@ -56,17 +66,14 @@
 			lastTime = now;
 		});
 
-		let rafId = 0;
-		function raf(time: number) {
-			lenis.raf(time);
-			rafId = requestAnimationFrame(raf);
-		}
-		rafId = requestAnimationFrame(raf);
+		const tick = (time: number) => lenis.raf(time * 1000);
+		gsap.ticker.add(tick);
+		gsap.ticker.lagSmoothing(0);
 
 		return () => {
-			cancelAnimationFrame(rafId);
+			gsap.ticker.remove(tick);
 			lenis.destroy();
-			lenisInstance = null;
+			lenisStore.set(null);
 			clearInterval(themeInterval);
 			cleanupTheme();
 		};

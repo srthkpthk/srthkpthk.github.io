@@ -4,6 +4,7 @@
 	import { base } from '$app/paths';
 	import { navLinks, siteConfig, projectsContent } from '$lib/data/content';
 	import { setThemeMode, toggleTheme } from '$lib/stores/theme';
+	import { smoothScrollTo } from '$lib/stores/lenis';
 
 	let open = $state(false);
 	let query = $state('');
@@ -18,9 +19,9 @@
 	}
 
 	function navigateToSection(href: string) {
-		const el = document.querySelector(href);
+		const el = document.querySelector<HTMLElement>(href);
 		if (el) {
-			el.scrollIntoView({ behavior: 'smooth' });
+			smoothScrollTo(el);
 		} else {
 			goto(`${base}/${href}`);
 		}
@@ -74,7 +75,7 @@
 			label: 'Scroll to top',
 			description: 'Go to the beginning',
 			action: () => {
-				window.scrollTo({ top: 0, behavior: 'smooth' });
+				smoothScrollTo(0);
 				close();
 			},
 			icon: '^'
