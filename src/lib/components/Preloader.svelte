@@ -35,6 +35,7 @@
 
 {#if $isLoading}
 	<div
+		data-testid="preloader"
 		class="fixed inset-0 z-[9998] flex items-center justify-center bg-bg"
 		style="transform: translateY({hiding ? '-100%' : '0'}); transition: transform 0.8s cubic-bezier(0.76, 0, 0.24, 1);"
 	>

@@ -25,3 +25,8 @@ node_modules/
 # OS
 Thumbs.db
 
+
+# Tests
+test-results/
+playwright-report/
+coverage/
