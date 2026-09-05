@@ -1,6 +1,8 @@
 import * as THREE from 'three';
 import vertexShader from './shaders/particles.vert';
 import fragmentShader from './shaders/particles.frag';
+import { HERO_FOV_DEG, ndcFromClient, tanHalfFov } from './pointer';
+import { icosahedronDetailFor, sampleSourceIndex } from './sampling';
 
 export interface SectionConfig {
 	geometry: THREE.BufferGeometry;
@@ -53,6 +55,8 @@ export class ParticleField {
 	private uniforms: Record<string, THREE.IUniform>;
 	private animationId: number = 0;
 	private destroyed = false;
+	private pointerSeen = false;
+	private pointerActive = true;
 	private mouse: THREE.Vector2 = new THREE.Vector2(0, 0);
 	private targetMouse: THREE.Vector2 = new THREE.Vector2(0, 0);
 	private clock: THREE.Clock = new THREE.Clock();
@@ -103,7 +107,7 @@ export class ParticleField {
 
 		this.scene = new THREE.Scene();
 		this.camera = new THREE.PerspectiveCamera(
-			70,
+			HERO_FOV_DEG,
 			backCanvas.clientWidth / backCanvas.clientHeight,
 			0.1,
 			100
@@ -134,7 +138,12 @@ export class ParticleField {
 			uTime: { value: 0 },
 			uMorph: { value: 1 },
 			uPixelRatio: { value: pixelRatio },
-			uMouse: { value: new THREE.Vector2(0, 0) },
+			uMouseNdc: { value: new THREE.Vector2(0, 0) },
+			uMouseActive: { value: 0 },
+			uMouseRadius: { value: 1.0 },
+			uMouseStrength: { value: 0.5 },
+			uTanHalfFov: { value: tanHalfFov(HERO_FOV_DEG) },
+			uAspect: { value: backCanvas.clientWidth / backCanvas.clientHeight },
 			uColorA: { value: new THREE.Color() },
 			uColorB: { value: new THREE.Color() },
 			uUseVertexColors: { value: 0 },
@@ -150,7 +159,7 @@ export class ParticleField {
 	private buildSectionConfigs() {
 		const count = this.particleCount;
 
-		const ico = new THREE.IcosahedronGeometry(1.8, Math.ceil(Math.sqrt(count / 12)));
+		const ico = new THREE.IcosahedronGeometry(1.8, icosahedronDetailFor(count));
 		this.sectionConfigs.push({
 			geometry: ico,
 			colorA: [0.545, 0.361, 0.965],
@@ -205,7 +214,7 @@ export class ParticleField {
 
 			for (let i = 0; i < count; i++) {
 				const i3 = i * 3;
-				const srcIdx = (i % srcCount) * 3;
+				const srcIdx = sampleSourceIndex(i, count, srcCount) * 3;
 				let x = srcPos[srcIdx] + (Math.random() - 0.5) * 0.08;
 				let y = srcPos[srcIdx + 1] + (Math.random() - 0.5) * 0.08;
 				let z = srcPos[srcIdx + 2] + (Math.random() - 0.5) * 0.08;
@@ -442,9 +451,9 @@ export class ParticleField {
 			this.camera.position.z = this.currentCameraZ;
 		}
 
-		// Lerp mouse position
-		this.mouse.lerp(this.targetMouse, 0.05);
-		this.uniforms.uMouse.value = this.mouse;
+		// Ease the pointer toward its target (NDC)
+		this.mouse.lerp(this.targetMouse, 0.15);
+		this.uniforms.uMouseNdc.value = this.mouse;
 
 		// Rotation
 		if (this.points) {
@@ -468,18 +477,33 @@ export class ParticleField {
 		}
 	};
 
+	/** Pointer position in client pixels; the shader resolves it against the camera. */
 	updateMouse(x: number, y: number) {
-		this.targetMouse.set(
-			(x / this.backCanvas.clientWidth) * 2 - 1,
-			-(y / this.backCanvas.clientHeight) * 2 + 1
-		);
-		this.targetMouse.multiplyScalar(3);
+		const [nx, ny] = ndcFromClient(x, y, this.backCanvas.clientWidth, this.backCanvas.clientHeight);
+		this.targetMouse.set(nx, ny);
+		if (!this.pointerSeen) {
+			// First real pointer sample: snap instead of easing in from the origin.
+			this.pointerSeen = true;
+			this.mouse.copy(this.targetMouse);
+		}
+		this.applyPointerActive();
+	}
+
+	/** Enable or suspend the repulsion (e.g. while the pointer is outside the window). */
+	setMouseActive(active: boolean) {
+		this.pointerActive = active;
+		this.applyPointerActive();
+	}
+
+	private applyPointerActive() {
+		this.uniforms.uMouseActive.value = this.pointerActive && this.pointerSeen ? 1 : 0;
 	}
 
 	resize() {
 		const width = this.backCanvas.clientWidth;
 		const height = this.backCanvas.clientHeight;
 		this.camera.aspect = width / height;
+		this.uniforms.uAspect.value = this.camera.aspect;
 		this.camera.updateProjectionMatrix();
 		this.backRenderer.setSize(width, height);
 		if (this.frontRenderer && this.frontCanvas) {

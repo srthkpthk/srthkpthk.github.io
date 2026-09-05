@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { SECTION_IDS } from '$lib/data/sections';
-	import { cursorPos } from '$lib/stores/cursor';
+	import { cursorHidden, cursorPos } from '$lib/stores/cursor';
 	import { activeSection, scrollVelocity } from '$lib/stores/scroll';
 	import { sceneReady } from '$lib/stores/loading';
 	import { resolvedTheme } from '$lib/stores/theme';
@@ -65,7 +65,18 @@
 				document.addEventListener('konami', onKonami);
 				cleanups.push(() => document.removeEventListener('konami', onKonami));
 
-				cleanups.push(cursorPos.subscribe(({ x, y }) => field?.updateMouse(x, y)));
+				// The store starts at (0, 0) before any pointer event; ignore that initial sample.
+				let pointerSeen = false;
+				cleanups.push(
+					cursorPos.subscribe(({ x, y }) => {
+						if (!pointerSeen) {
+							pointerSeen = true;
+							return;
+						}
+						field?.updateMouse(x, y);
+					})
+				);
+				cleanups.push(cursorHidden.subscribe((hidden) => field?.setMouseActive(!hidden)));
 				cleanups.push(scrollVelocity.subscribe((v) => field?.updateVelocity(v)));
 				cleanups.push(resolvedTheme.subscribe((theme) => field?.setDarkMode(theme === 'dark')));
 
