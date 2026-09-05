@@ -48,7 +48,6 @@
 
 		const unsubActive = activeSection.subscribe((section) => {
 			currentActive = section;
-			updateIndicator(section);
 		});
 
 		return () => {
@@ -57,6 +56,16 @@
 			// Never leave the page scroll-locked if we unmount while the menu is open.
 			get(lenis)?.start();
 		};
+	});
+
+	// Re-measure whenever the route or the active section changes, so the underline
+	// disappears on project pages instead of lingering at its last position.
+	$effect(() => {
+		if (isProjectPage) {
+			indicatorWidth = 0;
+		} else {
+			updateIndicator(currentActive);
+		}
 	});
 
 	function updateIndicator(section: string) {
@@ -146,6 +155,7 @@
 			<!-- Active section indicator -->
 			{#if indicatorWidth > 0}
 				<div
+					data-testid="nav-indicator"
 					class="absolute -bottom-1 h-[2px] bg-accent-violet transition-all duration-300 ease-out"
 					style="left: {indicatorLeft}px; width: {indicatorWidth}px;"
 				></div>

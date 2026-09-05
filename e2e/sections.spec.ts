@@ -29,3 +29,20 @@ test('section tracking survives a round trip through a project page', async ({ p
 	await page.locator('#skills').evaluate((el) => el.scrollIntoView());
 	await expect(activeLink(page)).toHaveText('Skills', { timeout: 5_000 });
 });
+
+test('the active-section underline only exists on the home page', async ({ page }) => {
+	await page.goto('/');
+	await waitForPreloader(page);
+
+	await page.locator('#about').evaluate((el) => el.scrollIntoView());
+	await expect(page.getByTestId('nav-indicator')).toHaveCount(1);
+
+	await page.locator('#projects a').first().click();
+	await expect(page).toHaveURL(/\/projects\//);
+	await expect(page.getByTestId('nav-indicator')).toHaveCount(0);
+
+	await page.getByRole('link', { name: 'SP.' }).click();
+	await expect(page).toHaveURL(/\/$/);
+	await page.locator('#skills').evaluate((el) => el.scrollIntoView());
+	await expect(page.getByTestId('nav-indicator')).toHaveCount(1);
+});
