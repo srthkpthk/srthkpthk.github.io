@@ -14,13 +14,13 @@
 <svelte:head>
 	<title>Sarthak Pathak — Software Engineer</title>
 	<meta name="description" content="Sarthak Pathak — Software Engineer specializing in cloud-native architecture, Spring Boot, AWS, and Flutter." />
-	<link rel="canonical" href="https://srthkpthk.github.io/portfolio/" />
+	<link rel="canonical" href="https://srthkpthk.github.io/" />
 
 	<!-- Open Graph -->
 	<meta property="og:title" content="Sarthak Pathak — Software Engineer" />
 	<meta property="og:description" content="Software Engineer specializing in cloud-native architecture, Spring Boot, AWS, and Flutter." />
 	<meta property="og:type" content="website" />
-	<meta property="og:url" content="https://srthkpthk.github.io/portfolio/" />
+	<meta property="og:url" content="https://srthkpthk.github.io/" />
 	<meta property="og:image" content="{base}/og-image.png" />
 	<meta property="og:image:width" content="1200" />
 	<meta property="og:image:height" content="630" />

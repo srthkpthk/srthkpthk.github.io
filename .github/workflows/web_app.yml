@@ -26,8 +26,6 @@ jobs:
 
       - run: npm ci
       - run: npm run build
-        env:
-          BASE_PATH: '/${{ github.event.repository.name }}'
 
       - name: Add .nojekyll
         run: touch build/.nojekyll

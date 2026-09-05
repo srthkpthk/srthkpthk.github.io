@@ -1,20 +1,23 @@
-# Srthk's Portfolio [![Say Thanks!](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/techysrthk%40gmail.com) [![License](https://img.shields.io/badge/license-MIT-orange.svg)](https://github.com/srthkpthk/portfolio/blob/master/LICENSE.md) ![GitHub stars](https://img.shields.io/github/stars/srthkpthk/portfolio) ![Flutter Web](https://github.com/srthkpthk/portfolio/workflows/Web%20App/badge.svg)
+# Sarthak Pathak — Portfolio
 
-A Portfolio Web App Made with flutter 
+[![License](https://img.shields.io/badge/license-MIT-orange.svg)](https://github.com/srthkpthk/srthkpthk.github.io/blob/master/LICENSE.md)
+[![Deploy](https://github.com/srthkpthk/srthkpthk.github.io/actions/workflows/web_app.yml/badge.svg)](https://github.com/srthkpthk/srthkpthk.github.io/actions/workflows/web_app.yml)
 
-- Responsive for desktop and mobiles
- #### Feel Free to make a PR or Issue
- 
- 
- #### Star the Repo if you find it useful 
-## Screenshots
+Personal portfolio, live at **https://srthkpthk.github.io/**.
 
-### - Mobile.
-<img src="mobile-ss.png">
+Built with [SvelteKit](https://kit.svelte.dev/) (static adapter), [Tailwind CSS](https://tailwindcss.com/), [Three.js](https://threejs.org/) and [GSAP](https://gsap.com/).
+Deployed to GitHub Pages from the `master` branch by the workflow in `.github/workflows/web_app.yml`.
 
-### - Desktop.
-<img src="desktop-ss.png">
+## Development
 
+```bash
+npm install
+npm run dev      # local dev server
+npm run check    # svelte-check
+npm run build    # static build into ./build
+npm run preview  # serve the production build
+```
 
+## License
 
- ##### Peace Out
+MIT — see [LICENSE.md](LICENSE.md).
