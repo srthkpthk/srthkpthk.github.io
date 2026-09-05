@@ -1,0 +1,10 @@
+# Package Managers
+package-lock.json
+
+# Generated / vendored
+build/
+.svelte-kit/
+node_modules/
+test-results/
+playwright-report/
+static/

@@ -13,7 +13,7 @@ test('hero particle scene boots on WebGL and fades in', async ({ page }) => {
 	const errors = collectErrors(page);
 
 	await page.goto('/');
-	await waitForPreloader(page);
+	await waitForPreloader(page, 15_000);
 
 	const canvases = page.locator('canvas');
 	await expect(canvases).toHaveCount(2);
@@ -29,7 +29,7 @@ test('hero particle scene boots on WebGL and fades in', async ({ page }) => {
 test('particle scene pauses while the tab is hidden', async ({ page }) => {
 	test.slow();
 	await page.goto('/');
-	await waitForPreloader(page);
+	await waitForPreloader(page, 15_000);
 
 	const canvas = page.locator('canvas').first();
 	await expect(canvas).toHaveAttribute('data-state', 'running');

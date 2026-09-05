@@ -38,7 +38,7 @@
 			el.style.background = colors[currentIndex % colors.length];
 
 			// Force reflow
-			el.offsetHeight;
+			void el.offsetHeight;
 
 			// Fade out
 			el.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';

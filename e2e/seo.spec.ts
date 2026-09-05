@@ -26,7 +26,7 @@ test('heading is readable without JavaScript', async ({ browser }) => {
 	await page.goto('/');
 
 	const text = await page.locator('h1').evaluate((el) => el.textContent ?? '');
-	expect(text.replace(/ /g, ' ').replace(/\s+/g, ' ').trim()).toBe('Sarthak Pathak');
+	expect(text.replace(/\u00a0/g, ' ').replace(/\s+/g, ' ').trim()).toBe('Sarthak Pathak');
 
 	await context.close();
 });

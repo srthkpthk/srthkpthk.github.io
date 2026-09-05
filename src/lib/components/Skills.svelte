@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { skillsContent } from '$lib/data/content';
-	import { scrollReveal, gsap, ScrollTrigger } from '$lib/actions/gsap';
+	import { scrollReveal, gsap } from '$lib/actions/gsap';
 	import SectionHeading from './SectionHeading.svelte';
 
 	let barsContainer = $state<HTMLElement | null>(null);
@@ -46,7 +46,8 @@
 	</div>
 
 	<!-- Skill bars -->
-	<div bind:this={barsContainer} class="mt-16 space-y-4">
+	<!-- Decorative: the pills above already list the skills for assistive tech -->
+	<div bind:this={barsContainer} class="mt-16 space-y-4" aria-hidden="true">
 		{#each skillsContent.skills as skill}
 			<div class="flex items-center gap-4">
 				<span class="w-24 shrink-0 font-mono text-xs text-text-subtle">{skill.name}</span>

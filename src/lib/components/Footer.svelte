@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { gsap, ScrollTrigger } from '$lib/actions/gsap';
+	import { gsap } from '$lib/actions/gsap';
 
 	let lineEl = $state<HTMLDivElement | null>(null);
 

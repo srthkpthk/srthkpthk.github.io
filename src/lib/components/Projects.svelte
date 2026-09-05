@@ -49,14 +49,16 @@
 				class="group block"
 				style="perspective: 800px;"
 				use:scrollReveal={{ delay: i * 0.1, y: 40 }}
+				onmousemove={(e) => handleTilt(e, e.currentTarget.firstElementChild as HTMLElement)}
+				onmouseleave={(e) => {
+					resetTilt(e.currentTarget.firstElementChild as HTMLElement);
+					hoveredIndex = -1;
+				}}
+				onmouseenter={() => (hoveredIndex = i)}
 			>
 				<div
 					class="tilt-card relative overflow-hidden rounded-xl border border-border bg-bg-card/80 p-8 transition-all duration-500 hover:border-border-hover"
 					style="transform-style: preserve-3d; transition: transform 0.15s ease-out, box-shadow 0.3s, border-color 0.3s; --glare-x: 50%; --glare-y: 50%;"
-					role="article"
-					onmousemove={(e) => handleTilt(e, e.currentTarget as HTMLElement)}
-					onmouseleave={(e) => { resetTilt(e.currentTarget as HTMLElement); hoveredIndex = -1; }}
-					onmouseenter={() => (hoveredIndex = i)}
 				>
 					<!-- Hover image/gradient reveal -->
 					<div

@@ -27,13 +27,12 @@ export function waitForReady({ signals, min = 500, cap = 1200 }: ReadinessOption
 export function firstTruthy<T>(store: Readable<T>): Promise<T> {
 	return new Promise((resolve) => {
 		let settled = false;
-		let unsubscribe: (() => void) | undefined;
-		unsubscribe = store.subscribe((value) => {
+		const unsubscribe = store.subscribe((value) => {
 			if (!value || settled) return;
 			settled = true;
 			resolve(value);
 			// subscribe() may still be executing its synchronous first call; defer the unsubscribe.
-			Promise.resolve().then(() => unsubscribe?.());
+			Promise.resolve().then(() => unsubscribe());
 		});
 		if (settled) unsubscribe();
 	});

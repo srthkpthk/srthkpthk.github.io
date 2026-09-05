@@ -18,7 +18,7 @@
 
 <div class="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6">
 	<!-- CSS floating particles -->
-	{#each Array(18) as _, i}
+	{#each Array(18) as _}
 		<div
 			class="error-particle absolute rounded-full bg-accent-violet/20"
 			style="

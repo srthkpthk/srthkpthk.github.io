@@ -14,6 +14,9 @@ Deployed to GitHub Pages from the `master` branch by the workflow in `.github/wo
 npm install
 npm run dev      # local dev server
 npm run check    # svelte-check
+npm run lint     # prettier --check + eslint
+npm run format   # prettier --write
+npm run test     # unit (Vitest) + e2e (Playwright, builds and previews the site)
 npm run build    # static build into ./build
 npm run preview  # serve the production build
 ```

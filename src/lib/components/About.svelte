@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { aboutContent } from '$lib/data/content';
-	import { scrollReveal, textReveal } from '$lib/actions/gsap';
+	import { scrollReveal } from '$lib/actions/gsap';
 	import SectionHeading from './SectionHeading.svelte';
 </script>
 

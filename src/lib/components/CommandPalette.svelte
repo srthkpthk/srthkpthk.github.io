@@ -124,12 +124,6 @@
 			: items
 	);
 
-	$effect(() => {
-		// Reset selection when filter changes
-		filtered;
-		selectedIndex = 0;
-	});
-
 	function close() {
 		open = false;
 		query = '';
@@ -200,6 +194,7 @@
 			<input
 				bind:this={inputEl}
 				bind:value={query}
+				oninput={() => (selectedIndex = 0)}
 				placeholder="Search commands..."
 				class="w-full bg-transparent font-mono text-sm text-text-primary outline-none placeholder:text-text-subtle"
 			/>
