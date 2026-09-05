@@ -61,7 +61,7 @@
 		dotEls.forEach((dot) => {
 			if (!dot) return;
 
-			ScrollTrigger.create({
+			const dotTrigger = ScrollTrigger.create({
 				trigger: dot,
 				start: 'top 85%',
 				onEnter: () => {
@@ -77,6 +77,7 @@
 				},
 				once: true
 			});
+			cleanups.push(() => dotTrigger.kill());
 		});
 
 		return () => cleanups.forEach((fn) => fn());

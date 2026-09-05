@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { SECTION_IDS } from '$lib/data/sections';
 	import { cursorPos } from '$lib/stores/cursor';
 	import { activeSection, scrollVelocity } from '$lib/stores/scroll';
 	import { resolvedTheme } from '$lib/stores/theme';
@@ -62,40 +63,14 @@
 				cleanups.push(scrollVelocity.subscribe((v) => field?.updateVelocity(v)));
 				cleanups.push(resolvedTheme.subscribe((theme) => field?.setDarkMode(theme === 'dark')));
 
+				// Section-driven morphing; the home route owns the scroll tracking.
+				cleanups.push(
+					activeSection.subscribe((id) => field?.transitionTo(SECTION_IDS.indexOf(id)))
+				);
+
 				const onResize = () => field?.resize();
 				window.addEventListener('resize', onResize);
 				cleanups.push(() => window.removeEventListener('resize', onResize));
-
-				// Section-based particle transitions via ScrollTrigger
-				const [{ ScrollTrigger }, { gsap }] = await Promise.all([
-					import('gsap/ScrollTrigger'),
-					import('gsap')
-				]);
-				if (cancelled) return;
-				gsap.registerPlugin(ScrollTrigger);
-
-				const sectionIds = ['hero', 'about', 'skills', 'projects', 'contact'];
-
-				// Wait for DOM sections to exist
-				requestAnimationFrame(() => {
-					if (cancelled) return;
-					sectionIds.forEach((id, index) => {
-						const el = document.getElementById(id);
-						if (!el) return;
-
-						const enter = () => {
-							field?.transitionTo(index);
-							activeSection.set(sectionIds[index]);
-						};
-						const trigger = ScrollTrigger.create({
-							trigger: el,
-							start: 'top center',
-							onEnter: enter,
-							onEnterBack: enter
-						});
-						cleanups.push(() => trigger.kill());
-					});
-				});
 			})
 			.catch(() => {
 				hasWebGL = false;

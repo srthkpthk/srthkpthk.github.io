@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
+	import { trackSections } from '$lib/actions/sections';
 	import { SITE_URL } from '$lib/data/content';
 	import Hero from '$lib/components/Hero.svelte';
 	import About from '$lib/components/About.svelte';
@@ -14,6 +16,8 @@
 	const description =
 		'Software Engineer specializing in cloud-native architecture, Spring Boot, AWS, and Flutter.';
 	const ogImage = `${SITE_URL}/og-image.png`;
+
+	onMount(() => trackSections());
 </script>
 
 <svelte:head>

@@ -46,6 +46,9 @@
 		});
 	}
 
+	let intro: gsap.core.Timeline | null = null;
+	let arrowTrigger: ScrollTrigger | null = null;
+
 	onMount(() => {
 		const unsub = isLoading.subscribe((loading) => {
 			if (!loading) {
@@ -56,7 +59,7 @@
 
 		// Scroll indicator fade
 		if (arrowEl) {
-			ScrollTrigger.create({
+			arrowTrigger = ScrollTrigger.create({
 				trigger: section,
 				start: 'top top',
 				end: '10% top',
@@ -66,11 +69,16 @@
 			});
 		}
 
-		return unsub;
+		return () => {
+			unsub();
+			arrowTrigger?.kill();
+			intro?.kill();
+		};
 	});
 
 	function animateIn() {
 		const tl = gsap.timeline({ defaults: { ease: 'power4.out' } });
+		intro = tl;
 
 		tl.from(photoEl, { scale: 0, opacity: 0, duration: 0.8 }, 0);
 		tl.from(greetingEl, { y: 30, opacity: 0, duration: 0.6 }, 0.2);

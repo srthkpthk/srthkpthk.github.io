@@ -88,6 +88,7 @@
 				<a
 					bind:this={linkEls[i]}
 					href={navHref(link.href)}
+					aria-current={!isProjectPage && currentActive === link.href.slice(1) ? 'true' : undefined}
 					class="group relative font-mono text-sm transition-colors hover:text-text-primary {!isProjectPage && currentActive === link.href.slice(1) ? 'text-text-primary' : 'text-text-muted'}"
 				>
 					{link.label}
