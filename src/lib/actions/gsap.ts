@@ -3,6 +3,10 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 if (typeof window !== 'undefined') {
 	gsap.registerPlugin(ScrollTrigger);
+	// ScrollTrigger.refresh() rewrites history.scrollRestoration with the value it saw at
+	// import time ("auto"), undoing SvelteKit's "manual" and making the browser restore
+	// scroll on its own before SvelteKit does. Pin it to manual.
+	ScrollTrigger.clearScrollMemory('manual');
 }
 
 export function scrollReveal(
