@@ -90,3 +90,34 @@ body {
 html.light .film-grain {
 	opacity: 0.03;
 }
+
+/*
+ * Time-of-day accent shifts. Generated from ACCENT_HSL / PERIOD_SHIFT in
+ * src/lib/stores/theme.ts; theme-css.test.ts fails if these drift. `day` has no rule
+ * so the base tokens apply. html.light[data-period] outranks html.light and
+ * html[data-period], which tie on specificity.
+ */
+html[data-period='dawn'] {
+	--color-accent-violet: #ca5af6;
+	--color-accent-cyan: #0475d2;
+}
+html.light[data-period='dawn'] {
+	--color-accent-violet: #b73bed;
+	--color-accent-cyan: #0856af;
+}
+html[data-period='dusk'] {
+	--color-accent-violet: #bd5af6;
+	--color-accent-cyan: #0487d2;
+}
+html.light[data-period='dusk'] {
+	--color-accent-violet: #a93bed;
+	--color-accent-cyan: #0864af;
+}
+html[data-period='night'] {
+	--color-accent-violet: #6f5af6;
+	--color-accent-cyan: #04d2b6;
+}
+html.light[data-period='night'] {
+	--color-accent-violet: #503bed;
+	--color-accent-cyan: #08afa7;
+}
