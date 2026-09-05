@@ -1,4 +1,6 @@
-import { writable } from 'svelte/store';
+import { writable, get } from 'svelte/store';
+
+// --- Time-of-day accent hue shifting (unchanged) ---
 
 export const timeAccent = writable<'dawn' | 'day' | 'dusk' | 'night'>('day');
 
@@ -37,11 +39,81 @@ export function updateTimeAccent() {
 
 	timeAccent.set(period);
 
-	// Base violet: HSL(263, 90%, 66%)
-	// Base cyan: HSL(187, 96%, 42%)
 	const violet = hslToHex(263 + shift, 90, 66);
 	const cyan = hslToHex(187 + shift, 96, 42);
 
 	document.documentElement.style.setProperty('--color-accent-violet', violet);
 	document.documentElement.style.setProperty('--color-accent-cyan', cyan);
+}
+
+// --- Sunrise / Sunset theme system (hour-based) ---
+
+export type ThemeMode = 'auto' | 'light' | 'dark';
+
+export const themeMode = writable<ThemeMode>('auto');
+export const resolvedTheme = writable<'light' | 'dark'>('dark');
+
+/** Daytime = 6 AM to 7 PM */
+function isDaytime(): boolean {
+	const h = new Date().getHours();
+	return h >= 6 && h < 19;
+}
+
+function applyTheme(theme: 'light' | 'dark') {
+	const html = document.documentElement;
+	if (theme === 'light') {
+		html.classList.add('light');
+	} else {
+		html.classList.remove('light');
+	}
+	resolvedTheme.set(theme);
+}
+
+let themeInterval: ReturnType<typeof setInterval> | null = null;
+
+export function initTheme(): () => void {
+	// Read persisted preference
+	const stored = localStorage.getItem('theme-preference') as ThemeMode | null;
+	const mode = stored || 'auto';
+	themeMode.set(mode);
+
+	resolveAndApply(mode);
+
+	// Check every 60s for sunrise/sunset transitions
+	themeInterval = setInterval(() => {
+		resolveAndApply(get(themeMode));
+	}, 60000);
+
+	// Subscribe to mode changes
+	const unsub = themeMode.subscribe((m) => {
+		localStorage.setItem('theme-preference', m);
+		resolveAndApply(m);
+	});
+
+	return () => {
+		unsub();
+		if (themeInterval) clearInterval(themeInterval);
+	};
+}
+
+function resolveAndApply(mode: ThemeMode) {
+	let theme: 'light' | 'dark';
+	if (mode === 'light') {
+		theme = 'light';
+	} else if (mode === 'dark') {
+		theme = 'dark';
+	} else {
+		theme = isDaytime() ? 'light' : 'dark';
+	}
+	applyTheme(theme);
+}
+
+export function toggleTheme() {
+	const current = get(themeMode);
+	const next: ThemeMode = current === 'auto' ? 'light' : current === 'light' ? 'dark' : 'auto';
+	themeMode.set(next);
+}
+
+export function setThemeMode(mode: ThemeMode) {
+	themeMode.set(mode);
 }

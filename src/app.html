@@ -3,14 +3,15 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<meta name="description" content="Srthk Pthk — Developer Portfolio" />
+		<meta name="description" content="Sarthak Pathak — Developer Portfolio" />
 		<meta name="theme-color" content="#0a0a0a" />
-		<meta property="og:title" content="Srthk Pthk — Portfolio" />
+		<meta property="og:title" content="Sarthak Pathak — Portfolio" />
 		<meta property="og:description" content="Developer portfolio showcasing projects and skills." />
 		<meta property="og:type" content="website" />
 		<meta property="og:image" content="%sveltekit.assets%/og-image.png" />
 		<meta name="twitter:card" content="summary_large_image" />
 		<meta name="twitter:image" content="%sveltekit.assets%/og-image.png" />
+		<link rel="icon" type="image/svg+xml" href="%sveltekit.assets%/favicon.svg" />
 		<link rel="icon" type="image/x-icon" href="%sveltekit.assets%/favicon.ico" />
 		<link rel="preconnect" href="https://api.fontshare.com" crossorigin />
 		<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
@@ -18,6 +19,18 @@
 		<link href="https://api.fontshare.com/v2/css?f[]=satoshi@700,800,900&display=swap" rel="stylesheet" />
 		<link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500&display=swap" rel="stylesheet" />
 		<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+		<script>
+			(function() {
+				var p = localStorage.getItem('theme-preference') || 'auto';
+				var dark = true;
+				if (p === 'light') dark = false;
+				else if (p !== 'dark') {
+					var h = new Date().getHours();
+					dark = h < 6 || h >= 19;
+				}
+				if (!dark) document.documentElement.classList.add('light');
+			})();
+		</script>
 		%sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data="hover">

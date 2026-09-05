@@ -3,6 +3,7 @@
 	import { goto } from '$app/navigation';
 	import { base } from '$app/paths';
 	import { navLinks, siteConfig, projectsContent } from '$lib/data/content';
+	import { setThemeMode, toggleTheme } from '$lib/stores/theme';
 
 	let open = $state(false);
 	let query = $state('');
@@ -33,6 +34,42 @@
 			action: () => navigateToSection(link.href),
 			icon: '#'
 		})),
+		{
+			label: 'Toggle Theme',
+			description: 'Cycle: auto → light → dark',
+			action: () => {
+				toggleTheme();
+				close();
+			},
+			icon: '◑'
+		},
+		{
+			label: 'Light Mode',
+			description: 'Switch to light theme',
+			action: () => {
+				setThemeMode('light');
+				close();
+			},
+			icon: '☀'
+		},
+		{
+			label: 'Dark Mode',
+			description: 'Switch to dark theme',
+			action: () => {
+				setThemeMode('dark');
+				close();
+			},
+			icon: '☾'
+		},
+		{
+			label: 'Auto Theme',
+			description: 'Follow sunrise/sunset',
+			action: () => {
+				setThemeMode('auto');
+				close();
+			},
+			icon: '⚙'
+		},
 		{
 			label: 'Scroll to top',
 			description: 'Go to the beginning',

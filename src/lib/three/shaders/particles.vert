@@ -6,6 +6,7 @@ uniform vec3 uColorA;
 uniform vec3 uColorB;
 uniform float uUseVertexColors;
 uniform float uVelocity;
+uniform float uDarkMode;
 
 attribute vec3 positionTarget;
 attribute vec3 aColor;
@@ -48,5 +49,6 @@ void main() {
     vec3 gradientColor = mix(uColorA, uColorB, clamp(colorMix, 0.0, 1.0));
     vColor = mix(gradientColor, aColor, uUseVertexColors);
 
-    vAlpha = 0.6 + aRandom * 0.4;
+    // Adjust alpha based on dark/light mode
+    vAlpha = mix(0.85, 0.6, uDarkMode) + aRandom * 0.3;
 }

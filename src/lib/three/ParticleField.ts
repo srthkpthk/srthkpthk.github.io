@@ -134,7 +134,8 @@ export class ParticleField {
 			uColorB: { value: new THREE.Color() },
 			uUseVertexColors: { value: 0 },
 			uDepthMode: { value: this.frontRenderer ? 0 : -1 },
-			uVelocity: { value: 0 }
+			uVelocity: { value: 0 },
+			uDarkMode: { value: 1.0 }
 		};
 
 		this.buildSectionConfigs();
@@ -354,6 +355,15 @@ export class ParticleField {
 		this.targetCameraZ = config.cameraZ ?? 4;
 
 		this.currentSection = sectionIndex;
+	}
+
+	setDarkMode(isDark: boolean) {
+		this.uniforms.uDarkMode.value = isDark ? 1.0 : 0.0;
+		if (this.points) {
+			const material = this.points.material as THREE.ShaderMaterial;
+			material.blending = isDark ? THREE.AdditiveBlending : THREE.NormalBlending;
+			material.needsUpdate = true;
+		}
 	}
 
 	updateVelocity(v: number) {

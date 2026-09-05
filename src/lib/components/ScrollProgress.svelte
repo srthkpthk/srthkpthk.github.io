@@ -10,5 +10,5 @@
 
 <div
 	class="fixed top-0 left-0 z-40 h-[2px] w-full origin-left"
-	style="transform: scaleX({progress}); background: linear-gradient(90deg, #8b5cf6, #06b6d4);"
+	style="transform: scaleX({progress}); background: linear-gradient(90deg, var(--color-accent-violet), var(--color-accent-cyan));"
 ></div>

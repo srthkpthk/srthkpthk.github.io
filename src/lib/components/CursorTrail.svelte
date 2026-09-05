@@ -1,9 +1,13 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { cursorPos } from '$lib/stores/cursor';
+	import { resolvedTheme } from '$lib/stores/theme';
 
 	const POOL_SIZE = 20;
-	const colors = ['#8b5cf6', '#06b6d4', '#ffffff'];
+
+	let darkColors = ['#8b5cf6', '#06b6d4', '#ffffff'];
+	let lightColors = ['#7c3aed', '#0891b2', '#1a1a1a'];
+	let colors = $state(darkColors);
 
 	let particles = $state<HTMLElement[]>([]);
 	let currentIndex = 0;
@@ -12,6 +16,10 @@
 	onMount(() => {
 		// Disable on touch devices
 		if ('ontouchstart' in window) return;
+
+		const unsubTheme = resolvedTheme.subscribe((theme) => {
+			colors = theme === 'light' ? lightColors : darkColors;
+		});
 
 		const unsub = cursorPos.subscribe(({ x, y }) => {
 			const now = performance.now();
@@ -27,6 +35,7 @@
 			el.style.top = `${y}px`;
 			el.style.opacity = '1';
 			el.style.transform = 'translate(-50%, -50%) scale(1)';
+			el.style.background = colors[currentIndex % colors.length];
 
 			// Force reflow
 			el.offsetHeight;
@@ -41,7 +50,10 @@
 			currentIndex = (currentIndex + 1) % POOL_SIZE;
 		});
 
-		return unsub;
+		return () => {
+			unsub();
+			unsubTheme();
+		};
 	});
 </script>
 

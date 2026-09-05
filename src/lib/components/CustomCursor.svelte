@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { cursorPos, cursorHover, cursorHidden } from '$lib/stores/cursor';
-	import { playHoverTick } from '$lib/audio/sounds';
 
 	let dot = $state<HTMLDivElement | null>(null);
 	let ring = $state<HTMLDivElement | null>(null);
@@ -41,7 +40,7 @@
 		const observer = new MutationObserver(() => {
 			document.querySelectorAll('a, button, [data-cursor-hover]').forEach((el) => {
 				if (!(el as HTMLElement).dataset.cursorBound) {
-					el.addEventListener('mouseenter', () => { cursorHover.set(true); playHoverTick(); });
+					el.addEventListener('mouseenter', () => cursorHover.set(true));
 					el.addEventListener('mouseleave', () => cursorHover.set(false));
 					(el as HTMLElement).dataset.cursorBound = '1';
 				}
@@ -50,7 +49,7 @@
 		observer.observe(document.body, { childList: true, subtree: true });
 		// Initial scan
 		document.querySelectorAll('a, button, [data-cursor-hover]').forEach((el) => {
-			el.addEventListener('mouseenter', () => { cursorHover.set(true); playHoverTick(); });
+			el.addEventListener('mouseenter', () => cursorHover.set(true));
 			el.addEventListener('mouseleave', () => cursorHover.set(false));
 			(el as HTMLElement).dataset.cursorBound = '1';
 		});

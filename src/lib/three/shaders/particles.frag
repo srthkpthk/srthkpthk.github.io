@@ -1,4 +1,5 @@
 uniform float uDepthMode;
+uniform float uDarkMode;
 
 varying vec3 vColor;
 varying float vAlpha;
@@ -19,5 +20,9 @@ void main() {
     if (dist > 0.5) discard;
 
     float alpha = smoothstep(0.5, 0.1, dist) * vAlpha;
-    gl_FragColor = vec4(vColor, alpha);
+
+    // Darken colors in light mode for visibility
+    vec3 color = mix(vColor * 0.5, vColor, uDarkMode);
+
+    gl_FragColor = vec4(color, alpha);
 }

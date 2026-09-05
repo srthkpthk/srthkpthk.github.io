@@ -97,7 +97,7 @@
 		<div
 			bind:this={photoEl}
 			class="h-28 w-28 overflow-hidden rounded-full md:h-36 md:w-36"
-			style="box-shadow: 0 0 30px rgba(139, 92, 246, 0.3), 0 0 60px rgba(6, 182, 212, 0.15); border: 2px solid rgba(139, 92, 246, 0.5);"
+			style="box-shadow: var(--color-hero-glow); border: 2px solid var(--color-hero-border);"
 		>
 			<img src="dp.jpg" alt="Profile" class="h-full w-full object-cover" />
 		</div>

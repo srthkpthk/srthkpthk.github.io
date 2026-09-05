@@ -51,7 +51,7 @@
 				use:scrollReveal={{ delay: i * 0.1, y: 40 }}
 			>
 				<div
-					class="tilt-card relative overflow-hidden rounded-xl border border-border bg-bg-card/80 p-8 transition-all duration-500 hover:border-border-hover hover:shadow-[0_0_30px_rgba(139,92,246,0.08)]"
+					class="tilt-card relative overflow-hidden rounded-xl border border-border bg-bg-card/80 p-8 transition-all duration-500 hover:border-border-hover"
 					style="transform-style: preserve-3d; transition: transform 0.15s ease-out, box-shadow 0.3s, border-color 0.3s; --glare-x: 50%; --glare-y: 50%;"
 					role="article"
 					onmousemove={(e) => handleTilt(e, e.currentTarget as HTMLElement)}
@@ -67,7 +67,7 @@
 					<!-- Glare overlay -->
 					<div
 						class="pointer-events-none absolute inset-0 z-10 rounded-xl opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-						style="background: radial-gradient(circle at var(--glare-x) var(--glare-y), rgba(255,255,255,0.12), transparent 60%);"
+						style="background: radial-gradient(circle at var(--glare-x) var(--glare-y), var(--color-glare), transparent 60%);"
 					></div>
 
 					<!-- Project content with depth -->

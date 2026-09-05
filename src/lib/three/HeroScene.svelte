@@ -3,6 +3,7 @@
 	import { cursorPos } from '$lib/stores/cursor';
 	import { activeSection } from '$lib/stores/scroll';
 	import { scrollVelocity } from '$lib/stores/scroll';
+	import { resolvedTheme } from '$lib/stores/theme';
 
 	let backCanvas = $state<HTMLCanvasElement | null>(null);
 	let frontCanvas = $state<HTMLCanvasElement | null>(null);
@@ -58,6 +59,10 @@
 			field?.updateVelocity(v);
 		});
 
+		const unsubTheme = resolvedTheme.subscribe((theme) => {
+			field?.setDarkMode(theme === 'dark');
+		});
+
 		const onResize = () => field?.resize();
 		window.addEventListener('resize', onResize);
 
@@ -95,6 +100,7 @@
 			field?.destroy();
 			unsubCursor();
 			unsubVelocity();
+			unsubTheme();
 			document.removeEventListener('konami', onKonami);
 			window.removeEventListener('resize', onResize);
 			triggers.forEach((t) => t.kill());

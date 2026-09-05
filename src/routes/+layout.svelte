@@ -14,10 +14,7 @@
 	import CommandPalette from '$lib/components/CommandPalette.svelte';
 	import PageTransition from '$lib/components/PageTransition.svelte';
 	import { scrollY, scrollProgress, scrollDirection, scrollVelocity } from '$lib/stores/scroll';
-	import { updateTimeAccent } from '$lib/stores/theme';
-	import { soundEnabled } from '$lib/stores/audio';
-	import { playScrollWhoosh } from '$lib/audio/sounds';
-	import { get } from 'svelte/store';
+	import { updateTimeAccent, initTheme, resolvedTheme } from '$lib/stores/theme';
 
 	let { children } = $props();
 	let lenisInstance: any = null;
@@ -29,7 +26,10 @@
 	});
 
 	onMount(async () => {
-		// Time-of-day theming
+		// Theme system
+		const cleanupTheme = initTheme();
+
+		// Time-of-day accent hue shifting
 		updateTimeAccent();
 		const themeInterval = setInterval(updateTimeAccent, 30 * 60 * 1000);
 
@@ -43,7 +43,6 @@
 
 		let lastScroll = 0;
 		let lastTime = performance.now();
-		let lastWhoosh = 0;
 
 		lenis.on('scroll', ({ scroll, limit }: { scroll: number; limit: number }) => {
 			const now = performance.now();
@@ -54,12 +53,6 @@
 			scrollProgress.set(scroll / limit);
 			scrollDirection.set(scroll > lastScroll ? 'down' : 'up');
 			scrollVelocity.set(velocity);
-
-			// Sound — throttle whoosh to 1 per 200ms
-			if (get(soundEnabled) && velocity > 0.3 && now - lastWhoosh > 200) {
-				playScrollWhoosh(velocity);
-				lastWhoosh = now;
-			}
 
 			lastScroll = scroll;
 			lastTime = now;
@@ -75,7 +68,17 @@
 			lenis.destroy();
 			lenisInstance = null;
 			clearInterval(themeInterval);
+			cleanupTheme();
 		};
+	});
+
+	// Dynamic theme-color meta tag
+	$effect(() => {
+		const theme = $resolvedTheme;
+		const meta = document.querySelector('meta[name="theme-color"]');
+		if (meta) {
+			meta.setAttribute('content', theme === 'light' ? '#fafafa' : '#0a0a0a');
+		}
 	});
 </script>
 

@@ -4,8 +4,7 @@
 	import { base } from '$app/paths';
 	import { navLinks } from '$lib/data/content';
 	import { scrollY, scrollDirection, activeSection } from '$lib/stores/scroll';
-	import { soundEnabled } from '$lib/stores/audio';
-	import { playClickPop } from '$lib/audio/sounds';
+	import { toggleTheme, themeMode } from '$lib/stores/theme';
 
 	let visible = $state(true);
 	let scrolled = $state(false);
@@ -71,18 +70,12 @@
 
 	function handleNavClick() {
 		mobileOpen = false;
-		playClickPop();
-	}
-
-	function toggleSound() {
-		soundEnabled.update((v) => !v);
-		playClickPop();
 	}
 </script>
 
 <nav
 	class="fixed top-0 left-0 z-50 w-full transition-all duration-500"
-	style="transform: translateY({visible ? 0 : -100}%); backdrop-filter: {scrolled ? 'blur(16px) saturate(180%)' : 'none'}; background-color: {scrolled ? 'rgba(10, 10, 10, 0.8)' : 'transparent'}; border-bottom: {scrolled ? '1px solid #222222' : 'none'};"
+	style="transform: translateY({visible ? 0 : -100}%); backdrop-filter: {scrolled ? 'blur(16px) saturate(180%)' : 'none'}; background-color: {scrolled ? 'var(--color-bg-nav)' : 'transparent'}; border-bottom: {scrolled ? '1px solid var(--color-border)' : 'none'};"
 >
 	<div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
 		<a href={isProjectPage ? `${base}/` : '#hero'} class="font-heading text-lg font-bold tracking-tight text-text-primary" onclick={handleNavClick}>
@@ -112,22 +105,26 @@
 				></div>
 			{/if}
 
-			<!-- Sound toggle -->
+			<!-- Theme toggle -->
 			<button
-				onclick={toggleSound}
+				onclick={toggleTheme}
 				class="ml-2 flex items-center justify-center text-text-muted transition-colors hover:text-text-primary"
-				aria-label="Toggle sound"
+				aria-label="Toggle theme"
 			>
-				{#if $soundEnabled}
+				{#if $themeMode === 'auto'}
 					<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-						<path d="M11 5L6 9H2v6h4l5 4V5z" />
-						<path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07" />
+						<circle cx="12" cy="12" r="5" />
+						<path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+						<path d="M16 12a4 4 0 01-4 4" stroke-dasharray="3 3" />
+					</svg>
+				{:else if $themeMode === 'light'}
+					<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+						<circle cx="12" cy="12" r="5" />
+						<path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
 					</svg>
 				{:else}
 					<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-						<path d="M11 5L6 9H2v6h4l5 4V5z" />
-						<line x1="23" y1="9" x2="17" y2="15" />
-						<line x1="17" y1="9" x2="23" y2="15" />
+						<path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
 					</svg>
 				{/if}
 			</button>
@@ -171,25 +168,30 @@
 				</a>
 			{/each}
 
-			<!-- Mobile sound toggle -->
+			<!-- Mobile theme toggle -->
 			<button
-				onclick={toggleSound}
+				onclick={toggleTheme}
 				class="mt-4 flex items-center gap-2 font-mono text-sm text-text-muted transition-colors hover:text-text-primary"
-				aria-label="Toggle sound"
+				aria-label="Toggle theme"
 			>
-				{#if $soundEnabled}
+				{#if $themeMode === 'auto'}
 					<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-						<path d="M11 5L6 9H2v6h4l5 4V5z" />
-						<path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07" />
+						<circle cx="12" cy="12" r="5" />
+						<path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+						<path d="M16 12a4 4 0 01-4 4" stroke-dasharray="3 3" />
 					</svg>
-					Sound On
+					Auto Theme
+				{:else if $themeMode === 'light'}
+					<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+						<circle cx="12" cy="12" r="5" />
+						<path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+					</svg>
+					Light Mode
 				{:else}
 					<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-						<path d="M11 5L6 9H2v6h4l5 4V5z" />
-						<line x1="23" y1="9" x2="17" y2="15" />
-						<line x1="17" y1="9" x2="23" y2="15" />
+						<path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
 					</svg>
-					Sound Off
+					Dark Mode
 				{/if}
 			</button>
 		</div>

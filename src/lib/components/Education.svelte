@@ -65,8 +65,9 @@
 				trigger: dot,
 				start: 'top 85%',
 				onEnter: () => {
+					const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--color-accent-violet').trim();
 					gsap.to(dot, {
-						boxShadow: '0 0 12px 3px rgba(139, 92, 246, 0.6)',
+						boxShadow: `0 0 12px 3px ${accentColor}99`,
 						scale: 1.5,
 						duration: 0.4,
 						yoyo: true,
