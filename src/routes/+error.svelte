@@ -2,27 +2,18 @@
 	import { onMount } from 'svelte';
 	import { page } from '$app/state';
 	import { base } from '$app/paths';
+	import { scramble } from '$lib/utils/scramble';
 
-	let displayText = $state('404');
-	const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%&*';
 	const target = '404';
+	let displayText = $state(target);
 
-	onMount(() => {
-		let iteration = 0;
-		const interval = setInterval(() => {
-			displayText = target
-				.split('')
-				.map((char, i) => {
-					if (i < iteration) return char;
-					return chars[Math.floor(Math.random() * chars.length)];
-				})
-				.join('');
-			if (iteration >= target.length) clearInterval(interval);
-			iteration += 1 / 3;
-		}, 40);
-
-		return () => clearInterval(interval);
-	});
+	onMount(() =>
+		scramble(target.split(''), (chars) => (displayText = chars.join('')), {
+			startDelay: 40,
+			duration: 240,
+			interval: 40
+		})
+	);
 </script>
 
 <div class="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6">

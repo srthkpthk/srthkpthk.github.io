@@ -43,3 +43,21 @@ test('browser back restores the previous scroll position', async ({ page }) => {
 		.toBeGreaterThan(before - 80);
 	expect(await page.evaluate(() => window.scrollY)).toBeLessThan(before + 80);
 });
+
+test('previous/next links re-render the project page for the new slug', async ({ page }) => {
+	await page.goto('/projects/quickflip');
+	await waitForPreloader(page);
+
+	await page.getByRole('link', { name: /next/i }).click();
+	await expect(page).toHaveURL(/\/projects\/unberry$/);
+	await expect(page).toHaveTitle(/Unberry ATS/);
+	await expect(page.locator('h1')).toHaveText('Unberry ATS', { timeout: 5_000 });
+
+	await page.getByRole('link', { name: /next/i }).click();
+	await expect(page).toHaveURL(/\/projects\/kotak-connect$/);
+	await expect(page.locator('h1')).toHaveText('Kotak Connect', { timeout: 5_000 });
+
+	await page.getByRole('link', { name: /previous/i }).click();
+	await expect(page).toHaveURL(/\/projects\/unberry$/);
+	await expect(page.locator('h1')).toHaveText('Unberry ATS', { timeout: 5_000 });
+});

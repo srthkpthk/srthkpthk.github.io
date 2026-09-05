@@ -4,6 +4,7 @@
 	import { heroContent } from '$lib/data/content';
 	import { isLoading } from '$lib/stores/loading';
 	import { gsap, ScrollTrigger } from '$lib/actions/gsap';
+	import { scramble } from '$lib/utils/scramble';
 
 	let section = $state<HTMLElement | null>(null);
 	let nameChars = $state<HTMLSpanElement[]>([]);
@@ -11,49 +12,21 @@
 	let taglineEl = $state<HTMLElement | null>(null);
 	let photoEl = $state<HTMLElement | null>(null);
 	let arrowEl = $state<HTMLElement | null>(null);
-	let ready = $state(false);
 
 	const nameLetters = heroContent.name.split('');
-	const SCRAMBLE_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&*';
-	const randomChar = () => SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)];
 	// Start from the real letters so the prerendered heading is readable; the client
 	// scramble replaces them right before the intro reveals the name.
 	let displayChars = $state<string[]>([...nameLetters]);
 
-	function scrambleText() {
-		nameLetters.forEach((targetChar, i) => {
-			if (targetChar === ' ') {
-				displayChars[i] = ' ';
-				return;
-			}
-
-			const startDelay = i * 30;
-			const scrambleDuration = 500;
-			const interval = 30;
-			let elapsed = 0;
-
-			setTimeout(() => {
-				const timer = setInterval(() => {
-					elapsed += interval;
-					if (elapsed >= scrambleDuration) {
-						displayChars[i] = targetChar;
-						clearInterval(timer);
-					} else {
-						displayChars[i] = SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)];
-					}
-				}, interval);
-			}, startDelay);
-		});
-	}
-
 	let intro: gsap.core.Timeline | null = null;
+	let introTimer: ReturnType<typeof setTimeout> | null = null;
 	let arrowTrigger: ScrollTrigger | null = null;
+	let cancelScramble: (() => void) | null = null;
 
 	onMount(() => {
 		const unsub = isLoading.subscribe((loading) => {
 			if (!loading) {
-				ready = true;
-				setTimeout(animateIn, 100);
+				introTimer = setTimeout(animateIn, 100);
 			}
 		});
 
@@ -71,8 +44,10 @@
 
 		return () => {
 			unsub();
+			if (introTimer) clearTimeout(introTimer);
 			arrowTrigger?.kill();
 			intro?.kill();
+			cancelScramble?.();
 		};
 	});
 
@@ -83,16 +58,16 @@
 		tl.from(photoEl, { scale: 0, opacity: 0, duration: 0.8 }, 0);
 		tl.from(greetingEl, { y: 30, opacity: 0, duration: 0.6 }, 0.2);
 
-		// Show name chars (fade in) then scramble
+		// Reveal the name already scrambled, then let it settle
 		nameChars.forEach((el) => {
 			if (el) el.style.opacity = '0';
 		});
 		tl.add(() => {
-			displayChars = nameLetters.map((c) => (c === ' ' ? ' ' : randomChar()));
+			cancelScramble?.();
+			cancelScramble = scramble(nameLetters, (chars) => (displayChars = chars));
 			nameChars.forEach((el) => {
 				if (el) el.style.opacity = '1';
 			});
-			scrambleText();
 		}, 0.3);
 
 		tl.from(taglineEl, { y: 20, opacity: 0, duration: 0.6 }, 0.8);

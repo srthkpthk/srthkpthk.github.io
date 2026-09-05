@@ -4,6 +4,7 @@
 	import { projectsContent, SITE_URL } from '$lib/data/content';
 	import type { Project } from '$lib/data/content';
 	import { scrollReveal, gsap } from '$lib/actions/gsap';
+	import { scramble } from '$lib/utils/scramble';
 	import SectionHeading from '$lib/components/SectionHeading.svelte';
 	import Footer from '$lib/components/Footer.svelte';
 
@@ -16,10 +17,9 @@
 	let prevProject = $derived(projects[(currentIndex - 1 + projects.length) % projects.length]);
 	let nextProject = $derived(projects[(currentIndex + 1) % projects.length]);
 
-	// Scramble animation for title
-	const SCRAMBLE_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&*';
+	// Title scramble. The parent layout keys this page on the slug, so the component is
+	// re-created for every project and may read the initial data here.
 	let titleLetters = $derived(project.title.split(''));
-	const randomChar = () => SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)];
 	// Start from the real title so the prerendered heading is readable; the client
 	// scramble replaces it right before the intro reveals the title.
 	let displayChars = $state<string[]>(untrack(() => data.project.title.split('')));
@@ -30,31 +30,8 @@
 	let metaEl = $state<HTMLElement | null>(null);
 	let titleChars = $state<HTMLSpanElement[]>([]);
 
-	function scrambleText() {
-		titleLetters.forEach((targetChar, i) => {
-			if (targetChar === ' ') {
-				displayChars[i] = ' ';
-				return;
-			}
-			const startDelay = i * 30;
-			const scrambleDuration = 500;
-			const interval = 30;
-			let elapsed = 0;
-			setTimeout(() => {
-				const timer = setInterval(() => {
-					elapsed += interval;
-					if (elapsed >= scrambleDuration) {
-						displayChars[i] = targetChar;
-						clearInterval(timer);
-					} else {
-						displayChars[i] = SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)];
-					}
-				}, interval);
-			}, startDelay);
-		});
-	}
-
 	onMount(() => {
+		let cancelScramble: (() => void) | null = null;
 		const tl = gsap.timeline({ defaults: { ease: 'power4.out' }, delay: 0.3 });
 
 		tl.from(numberEl, { y: 20, opacity: 0, duration: 0.6 }, 0);
@@ -63,15 +40,19 @@
 			if (el) el.style.opacity = '0';
 		});
 		tl.add(() => {
-			displayChars = titleLetters.map((c) => (c === ' ' ? ' ' : randomChar()));
+			cancelScramble = scramble(titleLetters, (chars) => (displayChars = chars));
 			titleChars.forEach((el) => {
 				if (el) el.style.opacity = '1';
 			});
-			scrambleText();
 		}, 0.2);
 
 		tl.from(subtitleEl, { y: 20, opacity: 0, duration: 0.6 }, 0.6);
 		tl.from(metaEl, { y: 20, opacity: 0, duration: 0.6 }, 0.8);
+
+		return () => {
+			tl.kill();
+			cancelScramble?.();
+		};
 	});
 </script>
 
