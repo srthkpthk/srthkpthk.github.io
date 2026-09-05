@@ -1,109 +1,111 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { cursorPos } from '$lib/stores/cursor';
-	import { activeSection } from '$lib/stores/scroll';
-	import { scrollVelocity } from '$lib/stores/scroll';
+	import { activeSection, scrollVelocity } from '$lib/stores/scroll';
 	import { resolvedTheme } from '$lib/stores/theme';
+	import type { ParticleField } from './ParticleField';
 
 	let backCanvas = $state<HTMLCanvasElement | null>(null);
 	let frontCanvas = $state<HTMLCanvasElement | null>(null);
-	let field: import('./ParticleField').ParticleField | null = null;
+	let field: ParticleField | null = null;
 	let hasWebGL = $state(true);
 	let threeReady = $state(false);
 
-	onMount(async () => {
+	/**
+	 * Probe WebGL support on a throwaway canvas. Probing on the canvas Three.js will
+	 * render to would pin it to whichever context succeeds first (e.g. WebGL1), which
+	 * makes Three's later WebGL2 request fail.
+	 */
+	function supportsWebGL(): boolean {
+		try {
+			const probe = document.createElement('canvas');
+			return !!(probe.getContext('webgl2') || probe.getContext('webgl'));
+		} catch {
+			return false;
+		}
+	}
+
+	onMount(() => {
 		if (!backCanvas) return;
 
-		// Check WebGL support
-		try {
-			const gl = backCanvas.getContext('webgl2') || backCanvas.getContext('webgl');
-			if (!gl) throw new Error('No WebGL');
-		} catch {
+		if (!supportsWebGL() || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
 			hasWebGL = false;
 			return;
 		}
 
-		// Check reduced motion
-		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-			hasWebGL = false;
-			return;
-		}
+		let cancelled = false;
+		const cleanups: (() => void)[] = [];
+		const back = backCanvas;
+		const front = frontCanvas ?? undefined;
 
-		try {
-			const { ParticleField } = await import('./ParticleField');
-			const isMobile = window.innerWidth < 800;
-			field = new ParticleField(backCanvas, isMobile, frontCanvas ?? undefined);
-			field.start();
+		import('./ParticleField')
+			.then(async ({ ParticleField }) => {
+				if (cancelled) return;
 
-			// Wait for first frame + minimum delay, then crossfade in
-			await new Promise<void>((resolve) => {
+				const isMobile = window.innerWidth < 800;
+				field = new ParticleField(back, isMobile, front);
+				field.start();
+
+				// Wait for first frame + minimum delay, then crossfade in
+				await new Promise<void>((resolve) => {
+					requestAnimationFrame(() => setTimeout(resolve, 500));
+				});
+				if (cancelled) return;
+				threeReady = true;
+
+				// Konami easter egg
+				const onKonami = () => field?.rainbowScatter();
+				document.addEventListener('konami', onKonami);
+				cleanups.push(() => document.removeEventListener('konami', onKonami));
+
+				cleanups.push(cursorPos.subscribe(({ x, y }) => field?.updateMouse(x, y)));
+				cleanups.push(scrollVelocity.subscribe((v) => field?.updateVelocity(v)));
+				cleanups.push(resolvedTheme.subscribe((theme) => field?.setDarkMode(theme === 'dark')));
+
+				const onResize = () => field?.resize();
+				window.addEventListener('resize', onResize);
+				cleanups.push(() => window.removeEventListener('resize', onResize));
+
+				// Section-based particle transitions via ScrollTrigger
+				const [{ ScrollTrigger }, { gsap }] = await Promise.all([
+					import('gsap/ScrollTrigger'),
+					import('gsap')
+				]);
+				if (cancelled) return;
+				gsap.registerPlugin(ScrollTrigger);
+
+				const sectionIds = ['hero', 'about', 'skills', 'projects', 'contact'];
+
+				// Wait for DOM sections to exist
 				requestAnimationFrame(() => {
-					setTimeout(resolve, 500);
+					if (cancelled) return;
+					sectionIds.forEach((id, index) => {
+						const el = document.getElementById(id);
+						if (!el) return;
+
+						const enter = () => {
+							field?.transitionTo(index);
+							activeSection.set(sectionIds[index]);
+						};
+						const trigger = ScrollTrigger.create({
+							trigger: el,
+							start: 'top center',
+							onEnter: enter,
+							onEnterBack: enter
+						});
+						cleanups.push(() => trigger.kill());
+					});
 				});
+			})
+			.catch(() => {
+				hasWebGL = false;
 			});
-			threeReady = true;
-		} catch {
-			hasWebGL = false;
-			return;
-		}
-
-		// Konami easter egg
-		const onKonami = () => field?.rainbowScatter();
-		document.addEventListener('konami', onKonami);
-
-		const unsubCursor = cursorPos.subscribe(({ x, y }) => {
-			field?.updateMouse(x, y);
-		});
-
-		const unsubVelocity = scrollVelocity.subscribe((v) => {
-			field?.updateVelocity(v);
-		});
-
-		const unsubTheme = resolvedTheme.subscribe((theme) => {
-			field?.setDarkMode(theme === 'dark');
-		});
-
-		const onResize = () => field?.resize();
-		window.addEventListener('resize', onResize);
-
-		// Section-based particle transitions via ScrollTrigger
-		const { ScrollTrigger } = await import('gsap/ScrollTrigger');
-		const { gsap } = await import('gsap');
-		gsap.registerPlugin(ScrollTrigger);
-
-		const sectionIds = ['hero', 'about', 'skills', 'projects', 'contact'];
-		const triggers: ScrollTrigger[] = [];
-
-		// Wait for DOM sections to exist
-		requestAnimationFrame(() => {
-			sectionIds.forEach((id, index) => {
-				const el = document.getElementById(id);
-				if (!el) return;
-
-				const trigger = ScrollTrigger.create({
-					trigger: el,
-					start: 'top center',
-					onEnter: () => {
-						field?.transitionTo(index);
-						activeSection.set(sectionIds[index]);
-					},
-					onEnterBack: () => {
-						field?.transitionTo(index);
-						activeSection.set(sectionIds[index]);
-					}
-				});
-				triggers.push(trigger);
-			});
-		});
 
 		return () => {
+			cancelled = true;
+			cleanups.forEach((fn) => fn());
 			field?.destroy();
-			unsubCursor();
-			unsubVelocity();
-			unsubTheme();
-			document.removeEventListener('konami', onKonami);
-			window.removeEventListener('resize', onResize);
-			triggers.forEach((t) => t.kill());
+			field = null;
 		};
 	});
 </script>

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { afterNavigate } from '$app/navigation';
+	import Lenis from 'lenis';
 	import '../app.css';
 	import Navbar from '$lib/components/Navbar.svelte';
 	import CustomCursor from '$lib/components/CustomCursor.svelte';
@@ -17,15 +18,13 @@
 	import { updateTimeAccent, initTheme, resolvedTheme } from '$lib/stores/theme';
 
 	let { children } = $props();
-	let lenisInstance: any = null;
+	let lenisInstance: Lenis | null = null;
 
 	afterNavigate(() => {
-		if (lenisInstance) {
-			lenisInstance.scrollTo(0, { immediate: true });
-		}
+		lenisInstance?.scrollTo(0, { immediate: true });
 	});
 
-	onMount(async () => {
+	onMount(() => {
 		// Theme system
 		const cleanupTheme = initTheme();
 
@@ -33,7 +32,6 @@
 		updateTimeAccent();
 		const themeInterval = setInterval(updateTimeAccent, 30 * 60 * 1000);
 
-		const Lenis = (await import('lenis')).default;
 		const lenis = new Lenis({
 			duration: 1.2,
 			easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -58,13 +56,15 @@
 			lastTime = now;
 		});
 
+		let rafId = 0;
 		function raf(time: number) {
 			lenis.raf(time);
-			requestAnimationFrame(raf);
+			rafId = requestAnimationFrame(raf);
 		}
-		requestAnimationFrame(raf);
+		rafId = requestAnimationFrame(raf);
 
 		return () => {
+			cancelAnimationFrame(rafId);
 			lenis.destroy();
 			lenisInstance = null;
 			clearInterval(themeInterval);

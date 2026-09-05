@@ -1,14 +1,13 @@
 import { error } from '@sveltejs/kit';
-import { getProjectBySlug, getAllSlugs } from '$lib/data/content';
+import type { EntryGenerator, PageLoad } from './$types';
+import { getAllSlugs, getProjectBySlug } from '$lib/data/content';
 
-export function entries() {
-	return getAllSlugs().map((slug) => ({ slug }));
-}
+export const entries: EntryGenerator = () => getAllSlugs().map((slug) => ({ slug }));
 
-export function load({ params }: { params: { slug: string } }) {
+export const load: PageLoad = ({ params }) => {
 	const project = getProjectBySlug(params.slug);
 	if (!project) {
-		throw error(404, 'Project not found');
+		error(404, 'Project not found');
 	}
 	return { project };
-}
+};
