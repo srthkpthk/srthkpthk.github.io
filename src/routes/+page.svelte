@@ -47,7 +47,10 @@
 <SectionDivider />
 <Skills />
 <Education />
-<Marquee items={['CREATIVE', 'DEVELOPER', 'DESIGNER', 'ENGINEER', 'INNOVATOR', 'BUILDER']} speed={35} />
+<Marquee
+	items={['CREATIVE', 'DEVELOPER', 'DESIGNER', 'ENGINEER', 'INNOVATOR', 'BUILDER']}
+	speed={35}
+/>
 <SectionDivider />
 <Projects />
 <SectionDivider />

@@ -9,7 +9,9 @@ test('decorative skill bars are hidden from assistive technology', async ({ page
 	await expect(hiddenBars).toHaveCount(8);
 
 	// The visible pills still expose every skill name.
-	await expect(page.locator('#skills span', { hasText: 'Java / Spring Boot' }).first()).toBeVisible();
+	await expect(
+		page.locator('#skills span', { hasText: 'Java / Spring Boot' }).first()
+	).toBeVisible();
 });
 
 test('project cards are plain links without a nested article role', async ({ page }) => {

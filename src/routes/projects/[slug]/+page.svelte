@@ -122,7 +122,8 @@
 					<span
 						bind:this={titleChars[i]}
 						class="inline-block bg-gradient-to-r from-text-primary via-accent-violet to-accent-cyan bg-clip-text text-transparent"
-					>{displayChars[i]}</span>
+						>{displayChars[i]}</span
+					>
 				{/if}
 			{/each}
 		</h1>
@@ -133,7 +134,10 @@
 		</p>
 
 		<!-- Meta -->
-		<div bind:this={metaEl} class="mt-8 flex items-center justify-center gap-6 font-mono text-xs text-text-subtle">
+		<div
+			bind:this={metaEl}
+			class="mt-8 flex items-center justify-center gap-6 font-mono text-xs text-text-subtle"
+		>
 			<span>{project.role}</span>
 			<span class="h-3 w-px bg-border"></span>
 			<span>{project.year}</span>
@@ -222,16 +226,23 @@
 
 <!-- F. Prev/Next Navigation -->
 <section class="mx-auto max-w-3xl px-6 py-24">
-	<div class="flex items-stretch justify-between gap-4 border-t border-border pt-12" use:scrollReveal>
+	<div
+		class="flex items-stretch justify-between gap-4 border-t border-border pt-12"
+		use:scrollReveal
+	>
 		<a
 			href="{base}/projects/{prevProject.slug}"
 			class="group flex flex-col items-start gap-2 text-left transition-colors hover:text-accent-violet"
 		>
-			<span class="font-mono text-xs text-text-subtle transition-colors group-hover:text-accent-violet">
+			<span
+				class="font-mono text-xs text-text-subtle transition-colors group-hover:text-accent-violet"
+			>
 				&larr; Previous
 			</span>
 			<span class="font-mono text-xs text-text-subtle">{prevProject.number}</span>
-			<span class="font-heading text-lg font-bold text-text-primary transition-colors group-hover:text-accent-violet">
+			<span
+				class="font-heading text-lg font-bold text-text-primary transition-colors group-hover:text-accent-violet"
+			>
 				{prevProject.title}
 			</span>
 		</a>
@@ -239,11 +250,15 @@
 			href="{base}/projects/{nextProject.slug}"
 			class="group flex flex-col items-end gap-2 text-right transition-colors hover:text-accent-violet"
 		>
-			<span class="font-mono text-xs text-text-subtle transition-colors group-hover:text-accent-violet">
+			<span
+				class="font-mono text-xs text-text-subtle transition-colors group-hover:text-accent-violet"
+			>
 				Next &rarr;
 			</span>
 			<span class="font-mono text-xs text-text-subtle">{nextProject.number}</span>
-			<span class="font-heading text-lg font-bold text-text-primary transition-colors group-hover:text-accent-violet">
+			<span
+				class="font-heading text-lg font-bold text-text-primary transition-colors group-hover:text-accent-violet"
+			>
 				{nextProject.title}
 			</span>
 		</a>

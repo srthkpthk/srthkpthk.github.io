@@ -2,9 +2,16 @@
 	import { onMount } from 'svelte';
 
 	const KONAMI = [
-		'ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown',
-		'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight',
-		'KeyB', 'KeyA'
+		'ArrowUp',
+		'ArrowUp',
+		'ArrowDown',
+		'ArrowDown',
+		'ArrowLeft',
+		'ArrowRight',
+		'ArrowLeft',
+		'ArrowRight',
+		'KeyB',
+		'KeyA'
 	];
 
 	onMount(() => {

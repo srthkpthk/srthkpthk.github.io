@@ -13,7 +13,9 @@ test('accent colours come from CSS overrides and follow theme + period', async (
 	await expect(root).toHaveAttribute('data-period', /^(dawn|day|dusk|night)$/);
 
 	const readAccent = () =>
-		root.evaluate((el) => getComputedStyle(el).getPropertyValue('--color-accent-violet').trim().toLowerCase());
+		root.evaluate((el) =>
+			getComputedStyle(el).getPropertyValue('--color-accent-violet').trim().toLowerCase()
+		);
 
 	await root.evaluate((el) => {
 		el.dataset.period = 'dawn';

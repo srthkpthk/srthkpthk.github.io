@@ -119,7 +119,7 @@ export const projectsContent = {
 			description:
 				'Complete AWS cloud migration for Quidich streaming service with scalable microservices architecture.',
 			longDescription: [
-				'Quickflip involved migrating Quidich\'s entire streaming service infrastructure to AWS cloud, architecting the complete system from scratch with a scalable microservices design.',
+				"Quickflip involved migrating Quidich's entire streaming service infrastructure to AWS cloud, architecting the complete system from scratch with a scalable microservices design.",
 				'The entire infrastructure was coded using Terraform IaC, deploying ECS for container orchestration, Lambda for serverless compute, and SQS for asynchronous message processing.',
 				'Achieved sub-100ms response times for automated request processing, ensuring high-performance streaming capabilities for end users.'
 			],
@@ -169,7 +169,7 @@ export const projectsContent = {
 			longDescription: [
 				'Kotak Connect is a scalable meeting scheduling application built for Kotak Securities, leveraging Flutter for cross-platform compatibility across tablet and mobile devices.',
 				'As tech lead, I spearheaded a team of 5 developers using Agile methodologies, with Figma for UI/UX design and Git for version control, ensuring consistent delivery cadence.',
-				'Successfully achieved 50,000+ downloads across Play Store and App Store, becoming a critical internal tool for Kotak Securities\' operations.'
+				"Successfully achieved 50,000+ downloads across Play Store and App Store, becoming a critical internal tool for Kotak Securities' operations."
 			],
 			tech: ['Flutter', 'Spring Boot', 'Figma', 'Agile'],
 			features: [
@@ -192,7 +192,7 @@ export const projectsContent = {
 				'Cross-platform mobile app with volunteer rewards system — 40,000+ downloads, 4.6-star rating.',
 			longDescription: [
 				'The NCP Volunteer Platform is a cross-platform mobile application with a Spring Boot backend, supporting both Android and iOS through Flutter. It features a volunteer rewards system that drove political engagement.',
-				'I independently designed, developed, and deployed the entire system end-to-end — from backend APIs to the Flutter frontend — delivering a polished product that significantly boosted the party\'s digital outreach.',
+				"I independently designed, developed, and deployed the entire system end-to-end — from backend APIs to the Flutter frontend — delivering a polished product that significantly boosted the party's digital outreach.",
 				'Achieved 40,000+ downloads with a 4.6-star rating on both Play Store and App Store.'
 			],
 			tech: ['Spring Boot', 'Flutter', 'Android', 'iOS', 'REST API'],

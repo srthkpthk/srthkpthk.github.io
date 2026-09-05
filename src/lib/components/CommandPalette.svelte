@@ -187,7 +187,15 @@
 	>
 		<!-- Search input -->
 		<div class="flex items-center gap-3 border-b border-border px-4 py-3">
-			<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="text-text-subtle shrink-0">
+			<svg
+				width="16"
+				height="16"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="1.5"
+				class="text-text-subtle shrink-0"
+			>
 				<circle cx="11" cy="11" r="8" />
 				<path d="M21 21l-4.35-4.35" />
 			</svg>
@@ -198,18 +206,26 @@
 				placeholder="Search commands..."
 				class="w-full bg-transparent font-mono text-sm text-text-primary outline-none placeholder:text-text-subtle"
 			/>
-			<kbd class="shrink-0 rounded border border-border px-1.5 py-0.5 font-mono text-[10px] text-text-subtle">ESC</kbd>
+			<kbd
+				class="shrink-0 rounded border border-border px-1.5 py-0.5 font-mono text-[10px] text-text-subtle"
+				>ESC</kbd
+			>
 		</div>
 
 		<!-- Results -->
 		<div class="max-h-64 overflow-y-auto p-2">
 			{#each filtered as item, i}
 				<button
-					class="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left transition-colors {i === selectedIndex ? 'bg-bg-hover text-text-primary' : 'text-text-muted hover:bg-bg-hover/50'}"
+					class="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left transition-colors {i ===
+					selectedIndex
+						? 'bg-bg-hover text-text-primary'
+						: 'text-text-muted hover:bg-bg-hover/50'}"
 					onclick={() => item.action()}
 					onmouseenter={() => (selectedIndex = i)}
 				>
-					<span class="flex h-6 w-6 shrink-0 items-center justify-center rounded bg-bg-hover font-mono text-xs text-accent-violet">
+					<span
+						class="flex h-6 w-6 shrink-0 items-center justify-center rounded bg-bg-hover font-mono text-xs text-accent-violet"
+					>
 						{item.icon}
 					</span>
 					<div class="min-w-0 flex-1">
@@ -239,11 +255,21 @@
 
 <style>
 	@keyframes paletteFadeIn {
-		from { opacity: 0; }
-		to { opacity: 1; }
+		from {
+			opacity: 0;
+		}
+		to {
+			opacity: 1;
+		}
 	}
 	@keyframes paletteSlideDown {
-		from { opacity: 0; transform: translate(-50%, -10px); }
-		to { opacity: 1; transform: translate(-50%, 0); }
+		from {
+			opacity: 0;
+			transform: translate(-50%, -10px);
+		}
+		to {
+			opacity: 1;
+			transform: translate(-50%, 0);
+		}
 	}
 </style>

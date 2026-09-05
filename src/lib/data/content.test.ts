@@ -48,7 +48,9 @@ describe('legacy /portfolio redirects', () => {
 	}) as Record<string, string>;
 
 	it('ships a redirect stub for every project slug', () => {
-		const bySlug = new Map(Object.entries(stubs).map(([path, html]) => [path.split('/').at(-2), html]));
+		const bySlug = new Map(
+			Object.entries(stubs).map(([path, html]) => [path.split('/').at(-2), html])
+		);
 		for (const slug of getAllSlugs()) {
 			const html = bySlug.get(slug);
 			expect(html, `missing redirect stub for ${slug}`).toBeDefined();

@@ -8,17 +8,39 @@
 	}
 
 	@keyframes grain {
-		0% { transform: translate(0, 0); }
-		10% { transform: translate(-2%, -3%); }
-		20% { transform: translate(3%, 1%); }
-		30% { transform: translate(-1%, 2%); }
-		40% { transform: translate(2%, -2%); }
-		50% { transform: translate(-3%, 3%); }
-		60% { transform: translate(1%, -1%); }
-		70% { transform: translate(-2%, 2%); }
-		80% { transform: translate(3%, -3%); }
-		90% { transform: translate(-1%, 1%); }
-		100% { transform: translate(0, 0); }
+		0% {
+			transform: translate(0, 0);
+		}
+		10% {
+			transform: translate(-2%, -3%);
+		}
+		20% {
+			transform: translate(3%, 1%);
+		}
+		30% {
+			transform: translate(-1%, 2%);
+		}
+		40% {
+			transform: translate(2%, -2%);
+		}
+		50% {
+			transform: translate(-3%, 3%);
+		}
+		60% {
+			transform: translate(1%, -1%);
+		}
+		70% {
+			transform: translate(-2%, 2%);
+		}
+		80% {
+			transform: translate(3%, -3%);
+		}
+		90% {
+			transform: translate(-1%, 1%);
+		}
+		100% {
+			transform: translate(0, 0);
+		}
 	}
 
 	@media (prefers-reduced-motion: reduce) {

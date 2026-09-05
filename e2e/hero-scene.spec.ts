@@ -20,7 +20,9 @@ test('hero particle scene boots on WebGL and fades in', async ({ page }) => {
 
 	// threeReady flips the canvas opacity from 0 to 0.9 once the first frame rendered.
 	await expect
-		.poll(() => canvases.first().evaluate((el) => getComputedStyle(el).opacity), { timeout: 10_000 })
+		.poll(() => canvases.first().evaluate((el) => getComputedStyle(el).opacity), {
+			timeout: 10_000
+		})
 		.toBe('0.9');
 
 	expect(errors).toEqual([]);

@@ -37,9 +37,7 @@
 			const fromProps = isDesktop
 				? { x: i % 2 === 0 ? -60 : 60, opacity: 0 }
 				: { y: 40, opacity: 0 };
-			const toProps = isDesktop
-				? { x: 0, opacity: 1 }
-				: { y: 0, opacity: 1 };
+			const toProps = isDesktop ? { x: 0, opacity: 1 } : { y: 0, opacity: 1 };
 
 			gsap.set(el, fromProps);
 
@@ -65,7 +63,9 @@
 				trigger: dot,
 				start: 'top 85%',
 				onEnter: () => {
-					const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--color-accent-violet').trim();
+					const accentColor = getComputedStyle(document.documentElement)
+						.getPropertyValue('--color-accent-violet')
+						.trim();
 					gsap.to(dot, {
 						boxShadow: `0 0 12px 3px ${accentColor}99`,
 						scale: 1.5,

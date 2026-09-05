@@ -63,7 +63,9 @@
 					<!-- Hover image/gradient reveal -->
 					<div
 						class="pointer-events-none absolute inset-0 z-0 rounded-xl bg-gradient-to-br opacity-20 {project.gradient}"
-						style="clip-path: {hoveredIndex === i ? 'inset(0)' : 'inset(0 0 0 100%)'}; transition: clip-path 0.5s cubic-bezier(0.77, 0, 0.175, 1);"
+						style="clip-path: {hoveredIndex === i
+							? 'inset(0)'
+							: 'inset(0 0 0 100%)'}; transition: clip-path 0.5s cubic-bezier(0.77, 0, 0.175, 1);"
 					></div>
 
 					<!-- Glare overlay -->

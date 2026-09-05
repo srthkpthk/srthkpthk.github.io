@@ -9,7 +9,10 @@
 	let overlay = $state<HTMLElement | null>(null);
 
 	// Tint follows both the section in view and the resolved theme.
-	const tint = derived([activeSection, resolvedTheme], ([section, theme]) => SECTION_TINT[theme][section]);
+	const tint = derived(
+		[activeSection, resolvedTheme],
+		([section, theme]) => SECTION_TINT[theme][section]
+	);
 
 	onMount(() => {
 		let first = true;

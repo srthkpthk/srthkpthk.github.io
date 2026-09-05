@@ -103,7 +103,10 @@
 		</p>
 
 		<!-- Name -->
-		<h1 class="font-heading text-5xl font-black tracking-tight md:text-7xl lg:text-8xl" style="line-height: 1.1;">
+		<h1
+			class="font-heading text-5xl font-black tracking-tight md:text-7xl lg:text-8xl"
+			style="line-height: 1.1;"
+		>
 			{#each nameLetters as char, i}
 				{#if char === ' '}
 					<span class="inline-block w-4 md:w-6">&nbsp;</span>
@@ -111,8 +114,8 @@
 					<span
 						bind:this={nameChars[i]}
 						class="inline-block bg-gradient-to-r from-text-primary via-accent-violet to-accent-cyan bg-clip-text text-transparent"
-						style="perspective: 600px;"
-					>{displayChars[i]}</span>
+						style="perspective: 600px;">{displayChars[i]}</span
+					>
 				{/if}
 			{/each}
 		</h1>
@@ -129,7 +132,15 @@
 		class="absolute bottom-8 left-1/2 -translate-x-1/2"
 		style="animation: bounce 2s ease-in-out infinite;"
 	>
-		<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="text-text-muted">
+		<svg
+			width="24"
+			height="24"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="1.5"
+			class="text-text-muted"
+		>
 			<path d="M7 13l5 5 5-5M7 6l5 5 5-5" />
 		</svg>
 	</div>
@@ -137,7 +148,12 @@
 
 <style>
 	@keyframes bounce {
-		0%, 100% { transform: translateY(0); }
-		50% { transform: translateY(8px); }
+		0%,
+		100% {
+			transform: translateY(0);
+		}
+		50% {
+			transform: translateY(8px);
+		}
 	}
 </style>

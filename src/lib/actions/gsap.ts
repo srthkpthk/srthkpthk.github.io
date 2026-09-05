@@ -5,7 +5,10 @@ if (typeof window !== 'undefined') {
 	gsap.registerPlugin(ScrollTrigger);
 }
 
-export function scrollReveal(node: HTMLElement, params?: { delay?: number; y?: number; duration?: number; stagger?: number }) {
+export function scrollReveal(
+	node: HTMLElement,
+	params?: { delay?: number; y?: number; duration?: number; stagger?: number }
+) {
 	const { delay = 0, y = 60, duration = 1, stagger = 0 } = params ?? {};
 
 	const children = stagger > 0 ? Array.from(node.children) : [node];

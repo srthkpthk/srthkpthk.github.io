@@ -27,17 +27,12 @@
 </script>
 
 <footer class="mx-auto max-w-6xl px-6 pb-12">
-	<div
-		bind:this={lineEl}
-		class="mb-8 h-px w-full origin-left bg-border"
-	></div>
+	<div bind:this={lineEl} class="mb-8 h-px w-full origin-left bg-border"></div>
 
 	<div class="flex flex-col items-center justify-between gap-4 md:flex-row">
 		<p class="font-mono text-xs text-text-subtle">
 			&copy; {new Date().getFullYear()} Srthk Pthk
 		</p>
-		<p class="font-mono text-xs text-text-subtle">
-			Built with SvelteKit + Three.js
-		</p>
+		<p class="font-mono text-xs text-text-subtle">Built with SvelteKit + Three.js</p>
 	</div>
 </footer>

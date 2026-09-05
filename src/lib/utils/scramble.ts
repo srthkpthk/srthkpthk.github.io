@@ -1,4 +1,5 @@
-export const SCRAMBLE_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&*';
+export const SCRAMBLE_CHARS =
+	'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&*';
 
 export interface ScrambleOptions {
 	/** Milliseconds between the start of each character's scramble. */
@@ -13,7 +14,10 @@ export interface ScrambleOptions {
 	rng?: () => number;
 }
 
-export function randomChar(chars: string = SCRAMBLE_CHARS, rng: () => number = Math.random): string {
+export function randomChar(
+	chars: string = SCRAMBLE_CHARS,
+	rng: () => number = Math.random
+): string {
 	return chars[Math.floor(rng() * chars.length)];
 }
 

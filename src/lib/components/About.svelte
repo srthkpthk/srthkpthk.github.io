@@ -20,10 +20,7 @@
 		<!-- Right: text -->
 		<div class="space-y-6">
 			{#each aboutContent.paragraphs as paragraph, i}
-				<p
-					class="text-text-muted leading-relaxed"
-					use:scrollReveal={{ delay: i * 0.15, y: 30 }}
-				>
+				<p class="text-text-muted leading-relaxed" use:scrollReveal={{ delay: i * 0.15, y: 30 }}>
 					{paragraph}
 				</p>
 			{/each}

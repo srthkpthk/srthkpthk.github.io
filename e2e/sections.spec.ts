@@ -1,7 +1,8 @@
 import { expect, test } from '@playwright/test';
 import { waitForPreloader } from './helpers';
 
-const activeLink = (page: import('@playwright/test').Page) => page.locator('nav a[aria-current="true"]');
+const activeLink = (page: import('@playwright/test').Page) =>
+	page.locator('nav a[aria-current="true"]');
 
 test('nav highlights the section in view', async ({ page }) => {
 	await page.goto('/');

@@ -17,12 +17,11 @@
 </script>
 
 <div class="marquee-container relative overflow-hidden py-8" style="--speed: {speed}s;">
-	<div
-		class="marquee-track flex whitespace-nowrap"
-		class:reverse={dir === 'up'}
-	>
+	<div class="marquee-track flex whitespace-nowrap" class:reverse={dir === 'up'}>
 		{#each doubled as item}
-			<span class="mx-8 inline-block font-heading text-4xl font-black text-text-subtle/20 md:text-6xl lg:text-8xl select-none">
+			<span
+				class="mx-8 inline-block font-heading text-4xl font-black text-text-subtle/20 md:text-6xl lg:text-8xl select-none"
+			>
 				{item}
 			</span>
 		{/each}
@@ -44,8 +43,12 @@
 	}
 
 	@keyframes marquee {
-		0% { transform: translateX(0); }
-		100% { transform: translateX(-50%); }
+		0% {
+			transform: translateX(0);
+		}
+		100% {
+			transform: translateX(-50%);
+		}
 	}
 
 	@media (prefers-reduced-motion: reduce) {

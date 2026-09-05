@@ -29,7 +29,11 @@
 	}
 
 	onMount(() => {
-		if (!backCanvas || !supportsWebGL() || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+		if (
+			!backCanvas ||
+			!supportsWebGL() ||
+			window.matchMedia('(prefers-reduced-motion: reduce)').matches
+		) {
 			hasWebGL = false;
 			sceneReady.set(true); // nothing to wait for
 			return;

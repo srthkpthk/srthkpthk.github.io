@@ -169,7 +169,7 @@ export class ParticleField {
 		const octa = new THREE.OctahedronGeometry(1.8, 4);
 		this.sectionConfigs.push({
 			geometry: octa,
-			colorA: [0.925, 0.282, 0.600],
+			colorA: [0.925, 0.282, 0.6],
 			colorB: [0.545, 0.361, 0.965],
 			rotationSpeed: 0.07,
 			cameraZ: 7,
@@ -179,7 +179,7 @@ export class ParticleField {
 		const torus = new THREE.TorusKnotGeometry(1.2, 0.4, 200, 32);
 		this.sectionConfigs.push({
 			geometry: torus,
-			colorA: [0.961, 0.620, 0.043],
+			colorA: [0.961, 0.62, 0.043],
 			colorB: [0.957, 0.247, 0.369],
 			rotationSpeed: 0.04
 		});
@@ -425,12 +425,14 @@ export class ParticleField {
 			this.uniforms.uColorB.value.lerpColors(this.currentColorB, this.targetColorB, eased);
 
 			this.uniforms.uUseVertexColors.value =
-				this.currentUseVertexColors + (this.targetUseVertexColors - this.currentUseVertexColors) * eased;
+				this.currentUseVertexColors +
+				(this.targetUseVertexColors - this.currentUseVertexColors) * eased;
 
 			if (this.prevColorArray && this.nextColorArray) {
 				const colArr = this.colorAttr.array as Float32Array;
 				for (let i = 0; i < colArr.length; i++) {
-					colArr[i] = this.prevColorArray[i] + (this.nextColorArray[i] - this.prevColorArray[i]) * eased;
+					colArr[i] =
+						this.prevColorArray[i] + (this.nextColorArray[i] - this.prevColorArray[i]) * eased;
 				}
 				this.colorAttr.needsUpdate = true;
 			}
@@ -513,7 +515,9 @@ export class ParticleField {
 
 		for (let i = 0; i < count; i++) {
 			const i3 = i * 3;
-			const x = posArr[i3], y = posArr[i3 + 1], z = posArr[i3 + 2];
+			const x = posArr[i3],
+				y = posArr[i3 + 1],
+				z = posArr[i3 + 2];
 			const len = Math.sqrt(x * x + y * y + z * z) || 0.01;
 			tgtArr[i3] = (x / len) * 3 * len + (Math.random() - 0.5) * 2;
 			tgtArr[i3 + 1] = (y / len) * 3 * len + (Math.random() - 0.5) * 2;

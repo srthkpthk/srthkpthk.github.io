@@ -13,7 +13,9 @@
 	<!-- Large heading -->
 	<div class="mb-8 text-center" use:scrollReveal={{ stagger: 0.1 }}>
 		{#each words as word}
-			<span class="mr-4 inline-block font-heading text-5xl font-black text-text-primary md:text-7xl lg:text-8xl">
+			<span
+				class="mr-4 inline-block font-heading text-5xl font-black text-text-primary md:text-7xl lg:text-8xl"
+			>
 				{word}
 			</span>
 		{/each}

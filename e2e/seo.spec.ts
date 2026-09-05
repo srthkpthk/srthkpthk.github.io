@@ -2,7 +2,9 @@ import { expect, test } from '@playwright/test';
 
 const SITE = 'https://srthkpthk.github.io';
 
-test('home HTML is server-rendered with a single title and absolute OG image', async ({ request }) => {
+test('home HTML is server-rendered with a single title and absolute OG image', async ({
+	request
+}) => {
 	const html = await (await request.get('/')).text();
 
 	expect(html.match(/<title>/g) ?? []).toHaveLength(1);
@@ -26,7 +28,12 @@ test('heading is readable without JavaScript', async ({ browser }) => {
 	await page.goto('/');
 
 	const text = await page.locator('h1').evaluate((el) => el.textContent ?? '');
-	expect(text.replace(/\u00a0/g, ' ').replace(/\s+/g, ' ').trim()).toBe('Sarthak Pathak');
+	expect(
+		text
+			.replace(/\u00a0/g, ' ')
+			.replace(/\s+/g, ' ')
+			.trim()
+	).toBe('Sarthak Pathak');
 
 	await context.close();
 });

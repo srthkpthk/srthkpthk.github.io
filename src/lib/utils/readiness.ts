@@ -17,7 +17,11 @@ const delay = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve,
  * Resolves 'ready' once all signals have settled and at least `min` ms have elapsed, or
  * 'timeout' when `cap` ms pass first.
  */
-export function waitForReady({ signals, min = 500, cap = 1200 }: ReadinessOptions): Promise<ReadinessOutcome> {
+export function waitForReady({
+	signals,
+	min = 500,
+	cap = 1200
+}: ReadinessOptions): Promise<ReadinessOutcome> {
 	const ready = Promise.all([Promise.allSettled(signals), delay(min)]).then(() => 'ready' as const);
 	const timeout = delay(cap).then(() => 'timeout' as const);
 	return Promise.race([ready, timeout]);

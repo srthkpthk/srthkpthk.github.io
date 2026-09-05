@@ -22,7 +22,12 @@ describe('scramble', () => {
 
 	it('settles on the target text after every character finishes', () => {
 		const frames: string[][] = [];
-		scramble(target, (f) => frames.push(f), { rng: () => 0, startDelay: 30, duration: 500, interval: 30 });
+		scramble(target, (f) => frames.push(f), {
+			rng: () => 0,
+			startDelay: 30,
+			duration: 500,
+			interval: 30
+		});
 
 		// Last character starts at 3 * 30ms and settles after ceil(500 / 30) ticks.
 		vi.advanceTimersByTime(90 + 510);
@@ -59,7 +64,7 @@ describe('scramble', () => {
 		const run = () => {
 			const frames: string[][] = [];
 			let seed = 1;
-			const rng = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+			const rng = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
 			const cancel = scramble(target, (f) => frames.push(f), { rng });
 			vi.advanceTimersByTime(300);
 			cancel();

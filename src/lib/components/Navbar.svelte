@@ -109,7 +109,11 @@
 
 <nav
 	class="fixed top-0 left-0 z-50 w-full transition-all duration-500"
-	style="transform: translateY({visible ? 0 : -100}%); backdrop-filter: {scrolled ? 'blur(16px) saturate(180%)' : 'none'}; background-color: {scrolled ? 'var(--color-bg-nav)' : 'transparent'}; border-bottom: {scrolled ? '1px solid var(--color-border)' : 'none'};"
+	style="transform: translateY({visible ? 0 : -100}%); backdrop-filter: {scrolled
+		? 'blur(16px) saturate(180%)'
+		: 'none'}; background-color: {scrolled
+		? 'var(--color-bg-nav)'
+		: 'transparent'}; border-bottom: {scrolled ? '1px solid var(--color-border)' : 'none'};"
 >
 	<div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
 		<a
@@ -127,7 +131,10 @@
 					bind:this={linkEls[i]}
 					href={navHref(link.href)}
 					aria-current={!isProjectPage && currentActive === link.href.slice(1) ? 'true' : undefined}
-					class="group relative font-mono text-sm transition-colors hover:text-text-primary {!isProjectPage && currentActive === link.href.slice(1) ? 'text-text-primary' : 'text-text-muted'}"
+					class="group relative font-mono text-sm transition-colors hover:text-text-primary {!isProjectPage &&
+					currentActive === link.href.slice(1)
+						? 'text-text-primary'
+						: 'text-text-muted'}"
 				>
 					{link.label}
 					<span
@@ -189,7 +196,10 @@
 			{#each navLinks as link, i}
 				<a
 					href={navHref(link.href)}
-					class="font-heading text-3xl font-bold transition-colors hover:text-accent-violet {!isProjectPage && currentActive === link.href.slice(1) ? 'text-accent-violet' : 'text-text-primary'}"
+					class="font-heading text-3xl font-bold transition-colors hover:text-accent-violet {!isProjectPage &&
+					currentActive === link.href.slice(1)
+						? 'text-accent-violet'
+						: 'text-text-primary'}"
 					onclick={() => closeMobile({ restoreFocus: false })}
 					style="animation: slideUp 0.4s ease {i * 0.05}s both;"
 				>
@@ -212,11 +222,21 @@
 
 <style>
 	@keyframes fadeIn {
-		from { opacity: 0; }
-		to { opacity: 1; }
+		from {
+			opacity: 0;
+		}
+		to {
+			opacity: 1;
+		}
 	}
 	@keyframes slideUp {
-		from { opacity: 0; transform: translateY(20px); }
-		to { opacity: 1; transform: translateY(0); }
+		from {
+			opacity: 0;
+			transform: translateY(20px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
 	}
 </style>

@@ -75,11 +75,18 @@
 	<div
 		data-testid="cursor-dot"
 		class="pointer-events-none fixed top-0 left-0 z-[9999] h-2 w-2 rounded-full bg-text-primary mix-blend-difference"
-		style="transform: translate({dotX - 4}px, {dotY - 4}px); opacity: {$cursorHidden ? 0 : 1}; transition: opacity 0.3s;"
+		style="transform: translate({dotX - 4}px, {dotY - 4}px); opacity: {$cursorHidden
+			? 0
+			: 1}; transition: opacity 0.3s;"
 	></div>
 	<div
 		data-testid="cursor-ring"
 		class="pointer-events-none fixed top-0 left-0 z-[9999] rounded-full border border-text-primary mix-blend-difference"
-		style="width: {$cursorHover ? 48 : 32}px; height: {$cursorHover ? 48 : 32}px; transform: translate({ringX - ($cursorHover ? 24 : 16)}px, {ringY - ($cursorHover ? 24 : 16)}px); opacity: {$cursorHidden ? 0 : 0.5}; transition: width 0.3s, height 0.3s, opacity 0.3s;"
+		style="width: {$cursorHover ? 48 : 32}px; height: {$cursorHover
+			? 48
+			: 32}px; transform: translate({ringX - ($cursorHover ? 24 : 16)}px, {ringY -
+			($cursorHover ? 24 : 16)}px); opacity: {$cursorHidden
+			? 0
+			: 0.5}; transition: width 0.3s, height 0.3s, opacity 0.3s;"
 	></div>
 {/if}

@@ -1,7 +1,9 @@
 import { expect, test } from '@playwright/test';
 import { waitForPreloader } from './helpers';
 
-test('custom cursor is scoped to pointer devices and grows over hover targets', async ({ page }) => {
+test('custom cursor is scoped to pointer devices and grows over hover targets', async ({
+	page
+}) => {
 	await page.goto('/');
 	await waitForPreloader(page);
 
