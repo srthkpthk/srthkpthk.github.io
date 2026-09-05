@@ -1,19 +1,20 @@
+export const SITE_URL = 'https://srthkpthk.github.io';
+
 export const siteConfig = {
 	name: 'Srthk Pthk',
 	tagline: 'Software Engineer',
 	email: 'srthk.pthk4@gmail.com',
 	social: {
-		github: 'https://github.com',
+		github: 'https://github.com/srthkpthk',
 		linkedin: 'https://www.linkedin.com/in/srthk-pthk/',
-		twitter: 'https://twitter.com'
+		twitter: 'https://twitter.com/SrthkPthk'
 	}
 };
 
 export const heroContent = {
 	greeting: "Hi, I'm",
 	name: 'Sarthak Pathak',
-	tagline: 'I architect cloud-native systems & ship products at scale.',
-	cta: 'View my work'
+	tagline: 'I architect cloud-native systems & ship products at scale.'
 };
 
 export const aboutContent = {
@@ -43,7 +44,6 @@ export const skillsContent = {
 };
 
 export const educationContent = {
-	sectionNumber: '02',
 	heading: 'Education',
 	timeline: [
 		{
@@ -74,7 +74,6 @@ export interface Project {
 	description: string;
 	longDescription: string[];
 	tech: string[];
-	image?: string;
 	features: string[];
 	links: {
 		github?: string;
@@ -101,7 +100,6 @@ export const projectsContent = {
 				'Successfully reduced manual support overhead by 60%, demonstrating significant operational efficiency improvements through advanced AI integration.'
 			],
 			tech: ['LangChain', 'RAG', 'MCP', 'Semantic Search', 'Python'],
-			image: undefined as string | undefined,
 			features: [
 				'RAG architecture for context-aware response generation',
 				'MCP server integration for tool use and agentic capabilities',
@@ -126,7 +124,6 @@ export const projectsContent = {
 				'Achieved sub-100ms response times for automated request processing, ensuring high-performance streaming capabilities for end users.'
 			],
 			tech: ['AWS', 'Terraform', 'ECS', 'Lambda', 'SQS', 'Microservices'],
-			image: undefined as string | undefined,
 			features: [
 				'Complete cloud migration from scratch on AWS',
 				'Infrastructure as Code with Terraform',
@@ -151,7 +148,6 @@ export const projectsContent = {
 				'Significantly improved hiring efficiency by reducing manual recruitment tasks and enabling faster candidate processing for HR teams.'
 			],
 			tech: ['Node.js', 'REST API', 'PostgreSQL', 'Docker'],
-			image: undefined as string | undefined,
 			features: [
 				'Automated recruitment API pipeline',
 				'Candidate tracking and workflow management',
@@ -176,7 +172,6 @@ export const projectsContent = {
 				'Successfully achieved 50,000+ downloads across Play Store and App Store, becoming a critical internal tool for Kotak Securities\' operations.'
 			],
 			tech: ['Flutter', 'Spring Boot', 'Figma', 'Agile'],
-			image: undefined as string | undefined,
 			features: [
 				'Cross-platform Flutter app for tablet and mobile',
 				'Led team of 5 developers with Agile methodologies',
@@ -201,7 +196,6 @@ export const projectsContent = {
 				'Achieved 40,000+ downloads with a 4.6-star rating on both Play Store and App Store.'
 			],
 			tech: ['Spring Boot', 'Flutter', 'Android', 'iOS', 'REST API'],
-			image: undefined as string | undefined,
 			features: [
 				'End-to-end solo development and deployment',
 				'Spring Boot backend with Flutter cross-platform frontend',
@@ -226,7 +220,6 @@ export const projectsContent = {
 				'The app resulted in 1 lakh new voter registrations, 200+ daily active chats, and 2,000+ downloads, significantly enhancing political engagement at the grassroots level.'
 			],
 			tech: ['Flutter', 'Freshchat', 'Agile', 'Spring Boot'],
-			image: undefined as string | undefined,
 			features: [
 				'Real-time chat via Freshchat integration',
 				'Led team of 3 developers using Agile',
@@ -251,7 +244,6 @@ export const projectsContent = {
 				'Successfully published and adopted, the SDK slashed development time by 50% for Flutter developers integrating Splitwise features.'
 			],
 			tech: ['Dart', 'Flutter', 'REST API', 'pub.dev'],
-			image: undefined as string | undefined,
 			features: [
 				'Published on pub.dev for community use',
 				'Complete wrapper for Splitwise REST API',

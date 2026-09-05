@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { base } from '$app/paths';
 	import { heroContent } from '$lib/data/content';
 	import { isLoading } from '$lib/stores/loading';
 	import { gsap, ScrollTrigger } from '$lib/actions/gsap';
@@ -14,7 +15,10 @@
 
 	const nameLetters = heroContent.name.split('');
 	const SCRAMBLE_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&*';
-	let displayChars = $state<string[]>(nameLetters.map(() => SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)]));
+	const randomChar = () => SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)];
+	// Start from the real letters so the prerendered heading is readable; the client
+	// scramble replaces them right before the intro reveals the name.
+	let displayChars = $state<string[]>([...nameLetters]);
 
 	function scrambleText() {
 		nameLetters.forEach((targetChar, i) => {
@@ -76,6 +80,7 @@
 			if (el) el.style.opacity = '0';
 		});
 		tl.add(() => {
+			displayChars = nameLetters.map((c) => (c === ' ' ? ' ' : randomChar()));
 			nameChars.forEach((el) => {
 				if (el) el.style.opacity = '1';
 			});
@@ -99,7 +104,14 @@
 			class="h-28 w-28 overflow-hidden rounded-full md:h-36 md:w-36"
 			style="box-shadow: var(--color-hero-glow); border: 2px solid var(--color-hero-border);"
 		>
-			<img src="dp.jpg" alt="Profile" class="h-full w-full object-cover" />
+			<img
+				src="{base}/dp.jpg"
+				width="144"
+				height="144"
+				alt="Sarthak Pathak"
+				fetchpriority="high"
+				class="h-full w-full object-cover"
+			/>
 		</div>
 
 		<!-- Greeting -->

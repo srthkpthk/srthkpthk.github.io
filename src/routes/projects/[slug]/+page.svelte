@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onMount, untrack } from 'svelte';
 	import { base } from '$app/paths';
-	import { projectsContent } from '$lib/data/content';
+	import { projectsContent, SITE_URL } from '$lib/data/content';
 	import type { Project } from '$lib/data/content';
 	import { scrollReveal, gsap } from '$lib/actions/gsap';
 	import SectionHeading from '$lib/components/SectionHeading.svelte';
@@ -19,8 +19,10 @@
 	// Scramble animation for title
 	const SCRAMBLE_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&*';
 	let titleLetters = $derived(project.title.split(''));
-	const initChars = project.title.split('').map(() => SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)]);
-	let displayChars = $state<string[]>(initChars);
+	const randomChar = () => SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)];
+	// Start from the real title so the prerendered heading is readable; the client
+	// scramble replaces it right before the intro reveals the title.
+	let displayChars = $state<string[]>(untrack(() => data.project.title.split('')));
 
 	let heroEl = $state<HTMLElement | null>(null);
 	let numberEl = $state<HTMLElement | null>(null);
@@ -61,6 +63,7 @@
 			if (el) el.style.opacity = '0';
 		});
 		tl.add(() => {
+			displayChars = titleLetters.map((c) => (c === ' ' ? ' ' : randomChar()));
 			titleChars.forEach((el) => {
 				if (el) el.style.opacity = '1';
 			});
@@ -75,6 +78,20 @@
 <svelte:head>
 	<title>{project.title} — Srthk Pthk</title>
 	<meta name="description" content={project.description} />
+	<link rel="canonical" href="{SITE_URL}/projects/{project.slug}" />
+
+	<!-- Open Graph -->
+	<meta property="og:title" content="{project.title} — Srthk Pthk" />
+	<meta property="og:description" content={project.description} />
+	<meta property="og:type" content="article" />
+	<meta property="og:url" content="{SITE_URL}/projects/{project.slug}" />
+	<meta property="og:image" content="{SITE_URL}/og-image.png" />
+
+	<!-- Twitter Card -->
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content="{project.title} — Srthk Pthk" />
+	<meta name="twitter:description" content={project.description} />
+	<meta name="twitter:image" content="{SITE_URL}/og-image.png" />
 </svelte:head>
 
 <!-- A. Project Hero -->

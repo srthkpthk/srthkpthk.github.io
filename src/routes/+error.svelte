@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { page } from '$app/state';
+	import { base } from '$app/paths';
 
 	let displayText = $state('404');
 	const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%&*';
@@ -56,7 +57,7 @@
 	</p>
 
 	<a
-		href="/"
+		href="{base}/"
 		class="group mt-8 inline-flex items-center gap-2 rounded-full border border-accent-violet px-6 py-3 font-mono text-sm text-accent-violet transition-all duration-300 hover:bg-accent-violet hover:text-bg"
 	>
 		<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="transition-transform duration-300 group-hover:-translate-x-1">
