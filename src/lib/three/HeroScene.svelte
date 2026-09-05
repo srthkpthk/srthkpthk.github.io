@@ -3,6 +3,7 @@
 	import { SECTION_IDS } from '$lib/data/sections';
 	import { cursorPos } from '$lib/stores/cursor';
 	import { activeSection, scrollVelocity } from '$lib/stores/scroll';
+	import { sceneReady } from '$lib/stores/loading';
 	import { resolvedTheme } from '$lib/stores/theme';
 	import type { ParticleField } from './ParticleField';
 
@@ -27,10 +28,9 @@
 	}
 
 	onMount(() => {
-		if (!backCanvas) return;
-
-		if (!supportsWebGL() || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+		if (!backCanvas || !supportsWebGL() || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
 			hasWebGL = false;
+			sceneReady.set(true); // nothing to wait for
 			return;
 		}
 
@@ -47,10 +47,11 @@
 				field = new ParticleField(back, isMobile, front);
 				field.start();
 
-				// Wait for first frame + minimum delay, then crossfade in
-				await new Promise<void>((resolve) => {
-					requestAnimationFrame(() => setTimeout(resolve, 500));
-				});
+				// First frame rendered: release the preloader, then hold briefly before the crossfade.
+				await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+				if (cancelled) return;
+				sceneReady.set(true);
+				await new Promise<void>((resolve) => setTimeout(resolve, 500));
 				if (cancelled) return;
 				threeReady = true;
 
@@ -74,6 +75,7 @@
 			})
 			.catch(() => {
 				hasWebGL = false;
+				sceneReady.set(true);
 			});
 
 		return () => {
