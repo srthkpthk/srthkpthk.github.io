@@ -66,14 +66,9 @@ body {
 	color: var(--color-text-primary);
 }
 
-* {
+/* The native cursor is hidden only while CustomCursor is mounted on a pointer device. */
+html.has-custom-cursor * {
 	cursor: none;
-}
-
-@media (pointer: coarse) {
-	* {
-		cursor: auto;
-	}
 }
 
 @media (prefers-reduced-motion: reduce) {

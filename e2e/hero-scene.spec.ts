@@ -1,11 +1,15 @@
 import { expect, test } from '@playwright/test';
 import { collectErrors, waitForPreloader } from './helpers';
 
-// The default config forces reduced motion so the WebGL hero is skipped; this
-// spec opts back in to exercise the real Three.js path (SwiftShader in headless).
+// The default config forces reduced motion so the WebGL hero is skipped. These tests opt
+// back in to exercise the real Three.js path. Headless Chromium renders WebGL on the CPU
+// (SwiftShader), so they run serially and with an extended timeout to avoid starving
+// each other.
 test.use({ reducedMotion: 'no-preference' });
+test.describe.configure({ mode: 'serial' });
 
 test('hero particle scene boots on WebGL and fades in', async ({ page }) => {
+	test.slow();
 	const errors = collectErrors(page);
 
 	await page.goto('/');
@@ -20,4 +24,25 @@ test('hero particle scene boots on WebGL and fades in', async ({ page }) => {
 		.toBe('0.9');
 
 	expect(errors).toEqual([]);
+});
+
+test('particle scene pauses while the tab is hidden', async ({ page }) => {
+	test.slow();
+	await page.goto('/');
+	await waitForPreloader(page);
+
+	const canvas = page.locator('canvas').first();
+	await expect(canvas).toHaveAttribute('data-state', 'running');
+
+	const setHidden = (hidden: boolean) =>
+		page.evaluate((value) => {
+			Object.defineProperty(document, 'hidden', { value, configurable: true });
+			document.dispatchEvent(new Event('visibilitychange'));
+		}, hidden);
+
+	await setHidden(true);
+	await expect(canvas).toHaveAttribute('data-state', 'paused');
+
+	await setHidden(false);
+	await expect(canvas).toHaveAttribute('data-state', 'running');
 });

@@ -12,6 +12,7 @@
 	let field: ParticleField | null = null;
 	let hasWebGL = $state(true);
 	let threeReady = $state(false);
+	let sceneState = $state<'running' | 'paused'>('running');
 
 	/**
 	 * Probe WebGL support on a throwaway canvas. Probing on the canvas Three.js will
@@ -72,6 +73,15 @@
 				const onResize = () => field?.resize();
 				window.addEventListener('resize', onResize);
 				cleanups.push(() => window.removeEventListener('resize', onResize));
+
+				// Do not burn GPU time while the tab is hidden.
+				const onVisibility = () => {
+					if (document.hidden) field?.pause();
+					else field?.resume();
+					sceneState = field?.isRunning ? 'running' : 'paused';
+				};
+				document.addEventListener('visibilitychange', onVisibility);
+				cleanups.push(() => document.removeEventListener('visibilitychange', onVisibility));
 			})
 			.catch(() => {
 				hasWebGL = false;
@@ -100,6 +110,7 @@
 	<canvas
 		bind:this={backCanvas}
 		class="fixed inset-0 z-0 h-full w-full"
+		data-state={sceneState}
 		style="opacity: {threeReady ? 0.9 : 0}; transition: opacity 1s ease;"
 	></canvas>
 	<!-- Front canvas: near particles (above content) -->

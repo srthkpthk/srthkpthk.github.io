@@ -43,6 +43,8 @@ function isLand(lat: number, lon: number): boolean {
 }
 
 export class ParticleField {
+	static readonly MAX_PIXEL_RATIO = 1.5;
+
 	private scene: THREE.Scene;
 	private camera: THREE.PerspectiveCamera;
 	private backRenderer: THREE.WebGLRenderer;
@@ -50,6 +52,7 @@ export class ParticleField {
 	private points: THREE.Points | null = null;
 	private uniforms: Record<string, THREE.IUniform>;
 	private animationId: number = 0;
+	private destroyed = false;
 	private mouse: THREE.Vector2 = new THREE.Vector2(0, 0);
 	private targetMouse: THREE.Vector2 = new THREE.Vector2(0, 0);
 	private clock: THREE.Clock = new THREE.Clock();
@@ -112,8 +115,10 @@ export class ParticleField {
 			antialias: false,
 			alpha: true
 		});
+		// Two full-screen renderers run every frame; cap the pixel ratio to keep fill-rate sane.
+		const pixelRatio = Math.min(window.devicePixelRatio, ParticleField.MAX_PIXEL_RATIO);
 		this.backRenderer.setSize(backCanvas.clientWidth, backCanvas.clientHeight);
-		this.backRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+		this.backRenderer.setPixelRatio(pixelRatio);
 
 		if (frontCanvas) {
 			this.frontRenderer = new THREE.WebGLRenderer({
@@ -122,13 +127,13 @@ export class ParticleField {
 				alpha: true
 			});
 			this.frontRenderer.setSize(frontCanvas.clientWidth, frontCanvas.clientHeight);
-			this.frontRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+			this.frontRenderer.setPixelRatio(pixelRatio);
 		}
 
 		this.uniforms = {
 			uTime: { value: 0 },
 			uMorph: { value: 1 },
-			uPixelRatio: { value: Math.min(window.devicePixelRatio, 2) },
+			uPixelRatio: { value: pixelRatio },
 			uMouse: { value: new THREE.Vector2(0, 0) },
 			uColorA: { value: new THREE.Color() },
 			uColorB: { value: new THREE.Color() },
@@ -372,6 +377,25 @@ export class ParticleField {
 
 	start() {
 		this.clock.start();
+		this.resume();
+	}
+
+	/** Whether the render loop is currently scheduled. */
+	get isRunning(): boolean {
+		return this.animationId !== 0;
+	}
+
+	/** Stops scheduling frames (e.g. while the tab is hidden); safe to call repeatedly. */
+	pause() {
+		if (this.animationId) {
+			cancelAnimationFrame(this.animationId);
+			this.animationId = 0;
+		}
+	}
+
+	/** Restarts the render loop if it is not already running. */
+	resume() {
+		if (this.destroyed || this.animationId) return;
 		this.animate();
 	}
 
@@ -515,7 +539,8 @@ export class ParticleField {
 	}
 
 	destroy() {
-		cancelAnimationFrame(this.animationId);
+		this.destroyed = true;
+		this.pause();
 		this.points?.geometry.dispose();
 		(this.points?.material as THREE.ShaderMaterial)?.dispose();
 		this.backRenderer.dispose();
